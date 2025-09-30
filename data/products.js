@@ -117,12 +117,12 @@ var list_products = [{
     "name": "iPhone X 256GB Silver",
     "company": "Apple",
     "img": "img/products/iphone-x-256gb-silver-400x400.jpg",
-    "price": "31.990.000",
+    "price": "18.790.000",
     "star": 4,
     "rateCount": 10,
     "promo": {
         "name": "giareonline",
-        "value": "27.990.000"
+        "value": "4.990.000"
     },
     "detail": {
         "screen": "OLED, 5.8', Super Retina",
@@ -182,39 +182,17 @@ var list_products = [{
         "battery": "3500 mAh"
     },
     "masp": "Sam2"
-}, {
-    "name": "iPad 2018 Wifi 32GB",
-    "company": "Apple",
-    "img": "img/products/ipad-wifi-32gb-2018-thumb-600x600.jpg",
-    "price": "8.990.000",
-    "star": 0,
-    "rateCount": 0,
-    "promo": {
-        "name": "tragop",
-        "value": "0"
-    },
-    "detail": {
-        "screen": "LED-backlit LCD, 9.7p''",
-        "os": "\tiOS 11.3",
-        "camara": "8 MP",
-        "camaraFront": "1.2 MP",
-        "cpu": "Apple A10 Fusion, 2.34 GHz",
-        "ram": "2 GB",
-        "rom": "32 GB",
-        "microUSB": "Không",
-        "battery": "Chưa có thông số cụ thể"
-    },
-    "masp": "App1"
-}, {
-    "name": "iPhone 7 Plus 32GB",
+},
+{
+    "name": "iPhone 7 Plus 32GB cũ",
     "company": "Apple",
     "img": "img/products/iphone-7-plus-32gb-hh-600x600.jpg",
-    "price": "17.000.000",
+    "price": "10.000.000",
     "star": 0,
     "rateCount": 0,
     "promo": {
         "name": "giareonline",
-        "value": "16.990.000"
+        "value": "3.790.000"
     },
     "detail": {
         "screen": "LED-backlit IPS LCD, 5.5', Retina HD",
@@ -1057,10 +1035,10 @@ var list_products = [{
     },
     "masp": "App3"
 }, {
-    "name": "iPhone 8 Plus 64GB",
+    "name": "iPhone 8 Plus 64GB cũ",
     "company": "Apple",
     "img": "https://cdn.tgdd.vn/Products/Images/42/114110/iphone-8-plus-hh-600x600.jpg",
-    "price": "20.990.000",
+    "price": "6.500.000",
     "star": 5,
     "rateCount": 230,
     "promo": {
@@ -1080,10 +1058,10 @@ var list_products = [{
     },
     "masp": "App4"
 }, {
-    "name": "iPhone 8 Plus 256GB",
+    "name": "iPhone 8 Plus 256GB cũ",
     "company": "Apple",
     "img": "https://cdn.tgdd.vn/Products/Images/42/114114/iphone-8-plus-256gb-red-600x600.jpg",
-    "price": "25.790.000",
+    "price": "7.590.000",
     "star": 5,
     "rateCount": 16,
     "promo": {
@@ -1151,12 +1129,12 @@ var list_products = [{
     "name": "iPhone 11 Pro 64GB",
     "company": "Apple",
     "img": "img/products/iphone-11-pro-64gb.jpg",
-    "price": "30.990.000",
+    "price": "29.000.000",
     "star": 5,
     "rateCount": 18,
     "promo": {
         "name": "giareonline",
-        "value": "27.990.000"
+        "value": "14.990.000"
     },
     "detail": {
         "screen": "OLED, 5.8', Super Retina XDR",
@@ -1179,8 +1157,8 @@ var list_products = [{
     "star": 5,
     "rateCount": 22,
     "promo": {
-        "name": "moiramat",
-        "value": "34.990.000"
+        "name": "giareonline",
+        "value": "28.990.000"
     },
     "detail": {
         "screen": "OLED, 5.8', Super Retina XDR",
@@ -1199,12 +1177,12 @@ var list_products = [{
     "name": "iPhone 11 64GB",
     "company": "Apple",
     "img": "img/products/iphone-11-64gb.jpg",
-    "price": "21.990.000",
+    "price": "7.450.000",
     "star": 4,
     "rateCount": 35,
     "promo": {
         "name": "giamgia",
-        "value": "19.990.000"
+        "value": "2.500.000"
     },
     "detail": {
         "screen": "IPS LCD, 6.1', Liquid Retina",
@@ -1223,12 +1201,12 @@ var list_products = [{
     "name": "iPhone 11 256GB",
     "company": "Apple",
     "img": "img/products/iphone-11-256gb.jpg",
-    "price": "25.990.000",
+    "price": "19.990.000",
     "star": 4,
     "rateCount": 28,
     "promo": {
         "name": "giareonline",
-        "value": "23.990.000"
+        "value": "8.490.000"
     },
     "detail": {
         "screen": "IPS LCD, 6.1', Liquid Retina",
@@ -1242,5 +1220,292 @@ var list_products = [{
         "battery": "3110 mAh, có sạc nhanh"
     },
     "masp": "App10"
-}
+},{
+        "name": "iPhone 12 64GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-64gb.jpg",
+        "price": "21.990.000",
+        "star": 5,
+        "rateCount": 15,
+        "promo": {
+            "name": "giareonline",
+            "value": "19.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.1', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "2 camera 12 MP",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "4 GB",
+            "rom": "64 GB",
+            "microUSB": "Không",
+            "battery": "2815 mAh, sạc nhanh"
+        },
+        "masp": "App11"
+    },
+    {
+        "name": "iPhone 12 128GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-128gb.jpg",
+        "price": "23.990.000",
+        "star": 5,
+        "rateCount": 18,
+        "promo": {
+            "name": "giareonline",
+            "value": "21.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.1', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "2 camera 12 MP",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "4 GB",
+            "rom": "128 GB",
+            "microUSB": "Không",
+            "battery": "2815 mAh, sạc nhanh"
+        },
+        "masp": "App12"
+    },
+    {
+        "name": "iPhone 12 256GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-256gb.jpg",
+        "price": "25.990.000",
+        "star": 5,
+        "rateCount": 22,
+        "promo": {
+            "name": "giareonline",
+            "value": "23.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.1', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "2 camera 12 MP",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "4 GB",
+            "rom": "256 GB",
+            "microUSB": "Không",
+            "battery": "2815 mAh, sạc nhanh"
+        },
+        "masp": "App13"
+    },
+    {
+        "name": "iPhone 12 Pro 128GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-pro-128gb.jpg",
+        "price": "27.990.000",
+        "star": 5,
+        "rateCount": 25,
+        "promo": {
+            "name": "giareonline",
+            "value": "25.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.1', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "3 camera 12 MP + LiDAR",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "6 GB",
+            "rom": "128 GB",
+            "microUSB": "Không",
+            "battery": "2815 mAh, sạc nhanh"
+        },
+        "masp": "App14"
+    },
+    {
+        "name": "iPhone 12 Pro 256GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-pro-256gb.jpg",
+        "price": "30.990.000",
+        "star": 5,
+        "rateCount": 28,
+        "promo": {
+            "name": "giareonline",
+            "value": "28.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.1', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "3 camera 12 MP + LiDAR",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "6 GB",
+            "rom": "256 GB",
+            "microUSB": "Không",
+            "battery": "2815 mAh, sạc nhanh"
+        },
+        "masp": "App15"
+    },
+    {
+        "name": "iPhone 12 Pro Max 256GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-promax-256gb.jpg",
+        "price": "33.990.000",
+        "star": 5,
+        "rateCount": 33,
+        "promo": {
+            "name": "giareonline",
+            "value": "31.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.7', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "3 camera 12 MP + LiDAR",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "6 GB",
+            "rom": "256 GB",
+            "microUSB": "Không",
+            "battery": "3687 mAh, sạc nhanh"
+        },
+        "masp": "App16"
+    },
+    {
+        "name": "iPhone 12 Pro Max 512GB",
+        "company": "Apple",
+        "img": "img/products/iphone-12-promax-512gb.jpg",
+        "price": "37.990.000",
+        "star": 5,
+        "rateCount": 37,
+        "promo": {
+            "name": "giareonline",
+            "value": "35.990.000"
+        },
+        "detail": {
+            "screen": "OLED, 6.7', Super Retina XDR",
+            "os": "iOS 14",
+            "camara": "3 camera 12 MP + LiDAR",
+            "camaraFront": "12 MP",
+            "cpu": "Apple A14 Bionic",
+            "ram": "6 GB",
+            "rom": "512 GB",
+            "microUSB": "Không",
+            "battery": "3687 mAh, sạc nhanh"
+        },
+        "masp": "App17"
+    },
+     {
+    "name": "iPhone 13 128GB ",
+    "company": "Apple",
+    "img": "img/products/iphone-13-128gb-pink.jpg",
+    "price": "21.990.000",
+    "star": 5,
+    "rateCount": 15,
+    "promo": {
+      "name": "giareonline",
+      "value": "19.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR",
+      "os": "iOS 15",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "4 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3240 mAh, có sạc nhanh"
+    },
+    "masp": "App18"
+  },
+  {
+    "name": "iPhone 13 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-13-256gb.jpg",
+    "price": "24.990.000",
+    "star": 5,
+    "rateCount": 18,
+    "promo": {
+      "name": "giareonline",
+      "value": "22.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR",
+      "os": "iOS 15",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "4 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "3240 mAh, có sạc nhanh"
+    },
+    "masp": "App20"
+  },
+  {
+    "name": "iPhone 13 Pro 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-13-pro-128gb.jpg",
+    "price": "28.990.000",
+    "star": 5,
+    "rateCount": 25,
+    "promo": {
+      "name": "giareonline",
+      "value": "26.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR",
+      "os": "iOS 15",
+      "camara": "3 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3095 mAh, có sạc nhanh"
+    },
+    "masp": "App22"
+  },
+  {
+    "name": "iPhone 13 Pro Max 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-13-promax-128gb.jpg",
+    "price": "31.990.000",
+    "star": 5,
+    "rateCount": 30,
+    "promo": {
+      "name": "giareonline",
+      "value": "29.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR",
+      "os": "iOS 15",
+      "camara": "3 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "4352 mAh, có sạc nhanh"
+    },
+    "masp": "App24"
+  },
+  {
+    "name": "iPhone 13 Pro Max 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-13-promax-256gb.jpg",
+    "price": "34.990.000",
+    "star": 5,
+    "rateCount": 28,
+    "promo": {
+      "name": "giareonline",
+      "value": "32.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR",
+      "os": "iOS 15",
+      "camara": "3 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "4352 mAh, có sạc nhanh"
+    },
+    "masp": "App25"
+  }
 ]
