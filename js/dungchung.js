@@ -520,13 +520,15 @@ function addTopNav() {
     document.write(`    
 	<div class="top-nav group">
         <section>
+<!-- 
             <div class="social-top-nav">
-                <a class="fa fa-facebook"></a>
-                <a class="fa fa-twitter"></a>
-                <a class="fa fa-google"></a>
-                <a class="fa fa-youtube"></a>
-            </div> <!-- End Social Topnav -->
-
+                <a class="fa-brands fa-facebook"></a>
+                <a class="fa-brands fa-x-twitter"></a>
+                <a class="fa-brands fa-google"></a>
+                <a class="fa-brands fa-youtube"></a>
+            </div> 
+             End Social Topnav    
+-->
             <ul class="top-nav-quicklink flexContain">
                 <li><a href="index.html"><i class="fa fa-home"></i> Trang chủ</a></li>
                 <li><a href="tintuc.html"><i class="fa fa-newspaper-o"></i> Tin tức</a></li>
