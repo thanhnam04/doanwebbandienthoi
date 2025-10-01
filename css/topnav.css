@@ -1,7 +1,7 @@
 /* Top Navigation */
 	.top-nav {
 		display: inline-block;
-		background: #f1f1f1;
+		background: #e4a2a2;
 		width: 100%;
 		border-bottom: 1px #e1e1e1 solid;
 	}
@@ -42,7 +42,7 @@
 		}
 		.top-nav-quicklink li a {
 			display: block;
-			color: gray;
+			color: rgb(24, 24, 24);
 			padding: 8px 15px;
 			transition-duration: .15s;
 		}

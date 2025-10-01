@@ -2,12 +2,14 @@ window.onload = function () {
 	khoiTao();
 
 	// Thêm hình vào banner
-	addBanner("img/banners/banner0.gif", "img/banners/banner0.gif");
-	var numBanner = 9; // Số lượng hình banner
-	for (var i = 1; i <= numBanner; i++) {
-		var linkimg = "img/banners/banner" + i + ".png";
-		addBanner(linkimg, linkimg);
-	}
+// Thêm hình vào banner
+var numBanner = 6; // Số lượng hình banner thực tế
+
+for (var i = 1; i <= numBanner; i++) {
+    var linkimg = "img/banners/banner0" + i + ".png";
+    addBanner(linkimg, linkimg);
+}
+
 
 	// Khởi động thư viện hỗ trợ banner - chỉ chạy khi đã tạo hình trong banner
 	var owl = $('.owl-carousel');
@@ -31,7 +33,7 @@ window.onload = function () {
 	// Thêm danh sách hãng điện thoại
 	var company = ["Apple.jpg", "Samsung.jpg", "Oppo.jpg", "Nokia.jpg", "Huawei.jpg", "Xiaomi.png",
 		"Realme.png", "Vivo.jpg", "Philips.jpg", "Mobell.jpg", "Mobiistar.jpg", "Itel.jpg",
-		"Coolpad.png", "HTC.jpg", "Motorola.jpg"
+		 "HTC.jpg", 
 	];
 	for (var c of company) addCompany("img/company/" + c, c.slice(0, c.length - 4));
 

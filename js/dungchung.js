@@ -562,9 +562,11 @@ function addHeader() {
                         </button>
                     </div>
                 </form> <!-- End Form search -->
+                
                 <div class="tags">
                     <strong>Từ khóa: </strong>
                 </div>
+                
             </div> <!-- End Search header -->
 
             <div class="tools-member">
