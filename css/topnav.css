@@ -1,7 +1,7 @@
 /* Top Navigation */
 	.top-nav {
 		display: inline-block;
-		background: #e4a2a2;
+		background: #781bdc;
 		width: 100%;
 		border-bottom: 1px #e1e1e1 solid;
 	}
@@ -42,14 +42,14 @@
 		}
 		.top-nav-quicklink li a {
 			display: block;
-			color: rgb(24, 24, 24);
+			color: rgb(239, 232, 232);
 			padding: 8px 15px;
 			transition-duration: .15s;
 		}
 		.top-nav-quicklink li a:hover {
 			padding-top: 4px; 
-			border-bottom: 4px solid #000;
-			color: #000;
+			border-bottom: 4px solid #fff8f8f1;
+			color: #ffffff;
 		}
 		.top-nav-quicklink li a:hover i {
 			color: Dodgerblue;
