@@ -547,7 +547,7 @@ function addHeader() {
 	<div class="header group">
         <div class="logo">
             <a href="index.html">
-                <img src="img/logo.jpg" alt="Trang chủ NAPC" title="Trang chủ NAPC">
+                <img src="img/logoweb1.jpg" alt="Trang chủ NAPC" title="Trang chủ NAPC">
             </a>
         </div> <!-- End Logo -->
 
