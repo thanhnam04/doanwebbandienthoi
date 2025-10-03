@@ -1,58 +1,98 @@
-/* Top Navigation */
-	.top-nav {
-		display: inline-block;
-		background: #781bdc;
-		width: 100%;
-		border-bottom: 1px #e1e1e1 solid;
-	}
+/* ================= Top Navigation ================= */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #6a11cb, #2575fc); /* tím -> xanh */
+    width: 100%;
+    border-bottom: 1px solid #e1e1e1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+}
 
-	/* Social Icon */
-		.social-top-nav {
-			float: left;
-			display: table;
-		}
-		.social-top-nav a {
-			display: table-cell;
-			padding: 5px;
-			text-align: center;
-			font-size: 13px;
-			height: 2em;
-			width: 2em;
-			line-height: 2em;
-			color: gray;
-			background-color: #f1f1f1;
-			transition-duration: .2s;
-		}
-		/* hightlight icon fb, google, youtube .... when hover */
-		.social-top-nav a:hover { color: #fff; }
-		.fa-facebook:hover { background: #3B5998; }
-		.fa-twitter:hover { background: #0f0e0e; }
-		.fa-google:hover { background: #dd4b39; }
-		.fa-youtube:hover { background: #bb0000; }
-	/* ======= End Social Icon ======= */
+/* ===== Social Icon ===== */
+.social-top-nav {
+    display: flex;
+    padding: 5px 10px;
+}
 
-	/* Quick link */
-		.top-nav-quicklink {
-			float: right;
-		}
-		.top-nav-quicklink li {
-			display: inline-block;
-			font-size: 1em;
-			color: gray;
-		}
-		.top-nav-quicklink li a {
-			display: block;
-			color: rgb(239, 232, 232);
-			padding: 8px 15px;
-			transition-duration: .15s;
-		}
-		.top-nav-quicklink li a:hover {
-			padding-top: 4px; 
-			border-bottom: 4px solid #fff8f8f1;
-			color: #ffffff;
-		}
-		.top-nav-quicklink li a:hover i {
-			color: Dodgerblue;
-		}
-	/* ======= End quick link ======= */
-/* ======= End Top navigation ======= */
+.social-top-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    font-size: 14px;
+    height: 2.2em;
+    width: 2.2em;
+    border-radius: 50%;
+    color: gray;
+    background-color: #f1f1f1;
+    transition: all 0.3s ease;
+}
+
+.social-top-nav a:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+.fa-facebook:hover { background: #3B5998; }
+.fa-twitter:hover { background: #1DA1F2; }
+.fa-google:hover { background: #dd4b39; }
+.fa-youtube:hover { background: #ff0000; }
+/* ===== End Social Icon ===== */
+
+/* ===== Quick link ===== */
+.top-nav-quicklink {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.top-nav-quicklink li {
+    display: inline-block;
+}
+
+.top-nav-quicklink li a {
+    display: block;
+    color: #f5f5f5;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.top-nav-quicklink li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 0;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.top-nav-quicklink li a:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.top-nav-quicklink li a:hover::after {
+    width: 100%;
+}
+
+.top-nav-quicklink li a i {
+    margin-right: 6px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.top-nav-quicklink li a:hover i {
+    transform: scale(1.2);
+    color: #ffd700; /* vàng gold khi hover */
+}
+/* ===== End Quick link ===== */
+
+/* ================= End Top Navigation ================= */
