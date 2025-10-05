@@ -1458,7 +1458,7 @@ var list_products = [{
       "microUSB": "Không",
       "battery": "3095 mAh, có sạc nhanh"
     },
-    "masp": "App22"
+    "masp": "App21"
   },
   {
     "name": "iPhone 13 Pro Max 128GB",
@@ -1482,7 +1482,7 @@ var list_products = [{
       "microUSB": "Không",
       "battery": "4352 mAh, có sạc nhanh"
     },
-    "masp": "App24"
+    "masp": "App22"
   },
   {
     "name": "iPhone 13 Pro Max 256GB",
@@ -1506,6 +1506,342 @@ var list_products = [{
       "microUSB": "Không",
       "battery": "4352 mAh, có sạc nhanh"
     },
+    "masp": "App23"
+  },
+  {
+    "name": "iPhone 14 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-128gb.jpg",
+    "price": "22.990.000",
+    "star": 5,
+    "rateCount": 425,
+    "promo": {
+      "name": "giareonline",
+      "value": "21.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR",
+      "os": "iOS 16",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3279 mAh, có sạc nhanh"
+    },
+    "masp": "App24"
+  },
+  {
+    "name": "iPhone 14 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-256gb.jpg",
+    "price": "25.990.000",
+    "star": 5,
+    "rateCount": 440,
+    "promo": {
+      "name": "giareonline",
+      "value": "24.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR",
+      "os": "iOS 16",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "3279 mAh, có sạc nhanh"
+    },
     "masp": "App25"
+  },
+  {
+    "name": "iPhone 14 Plus 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-plus-128gb.jpg",
+    "price": "25.990.000",
+    "star": 5,
+    "rateCount": 465,
+    "promo": {
+      "name": "giareonline",
+      "value": "24.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR",
+      "os": "iOS 16",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "4325 mAh, có sạc nhanh"
+    },
+    "masp": "App26"
+  },
+  {
+    "name": "iPhone 14 Plus 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-plus-256gb.jpg",
+    "price": "28.490.000",
+    "star": 5,
+    "rateCount": 482,
+    "promo": {
+      "name": "giareonline",
+      "value": "26.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR",
+      "os": "iOS 16",
+      "camara": "2 camera 12 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A15 Bionic",
+      "ram": "6 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "4325 mAh, có sạc nhanh"
+    },
+    "masp": "App27"
+  },
+  {
+    "name": "iPhone 14 Pro 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-pro-128gb.jpg",
+    "price": "28.990.000",
+    "star": 5,
+    "rateCount": 510,
+    "promo": {
+      "name": "giareonline",
+      "value": "27.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 16",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3200 mAh, có sạc nhanh"
+    },
+    "masp": "App28"
+  },
+  {
+    "name": "iPhone 14 Pro 512GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-pro-512gb.jpg",
+    "price": "36.990.000",
+    "star": 5,
+    "rateCount": 534,
+    "promo": {
+      "name": "giareonline",
+      "value": "35.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 16",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "512 GB",
+      "microUSB": "Không",
+      "battery": "3200 mAh, có sạc nhanh"
+    },
+    "masp": "App29"
+  },
+  {
+    "name": "iPhone 14 Pro Max 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-promax-256gb.jpg",
+    "price": "33.990.000",
+    "star": 5,
+    "rateCount": 558,
+    "promo": {
+      "name": "giareonline",
+      "value": "31.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 16",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "4323 mAh, có sạc nhanh"
+    },
+    "masp": "App30"
+  },
+  {
+    "name": "iPhone 14 Pro Max 512GB",
+    "company": "Apple",
+    "img": "img/products/iphone-14-promax-512gb.jpg",
+    "price": "38.990.000",
+    "star": 5,
+    "rateCount": 590,
+    "promo": {
+      "name": "giareonline",
+      "value": "36.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 16",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "512 GB",
+      "microUSB": "Không",
+      "battery": "4323 mAh, có sạc nhanh"
+    },
+    "masp": "App31"
+  },
+  {
+    "name": "iPhone 15 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-128gb.jpg",
+    "price": "24.990.000",
+    "star": 5,
+    "rateCount": 620,
+    "promo": {
+      "name": "giareonline",
+      "value": "22.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, Dynamic Island",
+      "os": "iOS 17",
+      "camara": "2 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3349 mAh, có sạc nhanh"
+    },
+    "masp": "App32"
+  },
+  {
+    "name": "iPhone 15 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-256gb.jpg",
+    "price": "27.990.000",
+    "star": 5,
+    "rateCount": 655,
+    "promo": {
+      "name": "giareonline",
+      "value": "25.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, Dynamic Island",
+      "os": "iOS 17",
+      "camara": "2 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "3349 mAh, có sạc nhanh"
+    },
+    "masp": "App33"
+  },
+  {
+    "name": "iPhone 15 Plus 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-plus-128gb.jpg",
+    "price": "26.990.000",
+    "star": 5,
+    "rateCount": 680,
+    "promo": {
+      "name": "giareonline",
+      "value": "25.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR, Dynamic Island",
+      "os": "iOS 17",
+      "camara": "2 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A16 Bionic",
+      "ram": "6 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "4383 mAh, có sạc nhanh"
+    },
+    "masp": "App34"
+  },
+  {
+    "name": "iPhone 15 Pro 128GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-pro-128gb.jpg",
+    "price": "29.990.000",
+    "star": 5,
+    "rateCount": 720,
+    "promo": {
+      "name": "giareonline",
+      "value": "28.490.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 17",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A17 Pro",
+      "ram": "8 GB",
+      "rom": "128 GB",
+      "microUSB": "Không",
+      "battery": "3274 mAh, có sạc nhanh"
+    },
+    "masp": "App35"
+  },
+  {
+    "name": "iPhone 15 Pro 256GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-pro-256gb.jpg",
+    "price": "32.490.000",
+    "star": 5,
+    "rateCount": 740,
+    "promo": {
+      "name": "giareonline",
+      "value": "30.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.1', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 17",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A17 Pro",
+      "ram": "8 GB",
+      "rom": "256 GB",
+      "microUSB": "Không",
+      "battery": "3274 mAh, có sạc nhanh"
+    },
+    "masp": "App36"
+  },
+  {
+    "name": "iPhone 15 Pro Max 512GB",
+    "company": "Apple",
+    "img": "img/products/iphone-15-promax-512gb.jpg",
+    "price": "39.990.000",
+    "star": 5,
+    "rateCount": 785,
+    "promo": {
+      "name": "giareonline",
+      "value": "37.990.000"
+    },
+    "detail": {
+      "screen": "OLED, 6.7', Super Retina XDR, ProMotion 120Hz",
+      "os": "iOS 17",
+      "camara": "3 camera 48 MP",
+      "camaraFront": "12 MP",
+      "cpu": "Apple A17 Pro",
+      "ram": "8 GB",
+      "rom": "512 GB",
+      "microUSB": "Không",
+      "battery": "4422 mAh, có sạc nhanh"
+    },
+    "masp": "App37"
   }
 ]
