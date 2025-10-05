@@ -61,7 +61,9 @@ for (var i = 1; i <= numBanner; i++) {
 
 		// Thêm các khung sản phẩm
 		var div = document.getElementsByClassName('contain-khungSanPham')[0];
-		addKhungSanPham('NỔI BẬT NHẤT', yellow_red, ['star=3', 'sort=rateCount-decrease'], soLuong, div);
+		addKhungSanPham('BÁN CHẠY', yellow_red, ['star=3', 'sort=rateCount-decrease'], soLuong, div);
+		// sản phẩm bán chạy dựa trên lượng ratecount từng sp và sort descending
+		// tương tự cho các dòng chú ý sp bên dưới
 		addKhungSanPham('SẢN PHẨM MỚI', blue, ['promo=moiramat', 'sort=rateCount-decrease'], soLuong, div);
 		addKhungSanPham('TRẢ GÓP 0%', yellow_red, ['promo=tragop', 'sort=rateCount-decrease'], soLuong, div);
 		addKhungSanPham('GIÁ SỐC ONLINE', green, ['promo=giareonline', 'sort=rateCount-decrease'], soLuong, div);

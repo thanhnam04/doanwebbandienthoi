@@ -442,7 +442,7 @@ var list_products = [{
     "img": "https://cdn.tgdd.vn/Products/Images/42/22701/dien-thoai-di-dong-Nokia-1280-dienmay.com-l.jpg",
     "price": "999.999.000",
     "star": 5,
-    "rateCount": 9999,
+    "rateCount": 9,
     "promo": {
         "name": "giamgia",
         "value": "1.000"
@@ -1346,7 +1346,7 @@ var list_products = [{
         "img": "img/products/iphone-12-promax-256gb.jpg",
         "price": "33.990.000",
         "star": 5,
-        "rateCount": 33,
+        "rateCount": 990,
         "promo": {
             "name": "giareonline",
             "value": "31.990.000"

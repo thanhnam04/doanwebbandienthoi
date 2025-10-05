@@ -11,7 +11,7 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #4CAF50;
+    background: linear-gradient(135deg, #6a5acd, #3ab0d6);
     color: white;
 }
 .listSanPham td {

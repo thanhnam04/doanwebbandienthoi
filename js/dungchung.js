@@ -610,8 +610,8 @@ function addFooter() {
 
     <!-- ============== Footer ============= -->
     <div class="copy-right">
-        <p><a href="index.html">LDD Phone Store</a> - All rights reserved © 2021 - Designed by
-            <span style="color: #eee; font-weight: bold">group 15th</span></p>
+        <p><a href="index.html">NAPC Smartphone Store</a> - All rights reserved © 2025 - Designed by
+            <span style="color: #eee; font-weight: bold">Nhóm tứ đại chiến tướng</span></p>
     </div>`);
 }
 
@@ -713,13 +713,13 @@ function addPlc() {
     <div class="plc">
         <section>
             <ul class="flexContain">
-                <li>Giao hàng hỏa tốc trong 1 giờ</li>
-                <li>Thanh toán linh hoạt: tiền mặt, visa / master, trả góp</li>
-                <li>Trải nghiệm sản phẩm tại nhà</li>
-                <li>Lỗi đổi tại nhà trong 1 ngày</li>
+                <li></li>
+                <li>Thanh toán linh hoạt: tiền mặt, chuyển khoản</li>
+                <li>Trải nghiệm sản phẩm tại cửa hàng</li>
+                <li>Lỗi đổi tại cửa hàng trong 1 ngày</li>
                 <li>Hỗ trợ suốt thời gian sử dụng.
                     <br>Hotline:
-                    <a href="tel:12345678" style="color: #288ad6;">12345678</a>
+                    <a href="tel:12345678" style="color: #e5e7eaff;">12345678</a>
                 </li>
             </ul>
         </section>
