@@ -1843,5 +1843,29 @@ var list_products = [{
       "battery": "4422 mAh, có sạc nhanh"
     },
     "masp": "App37"
-  }
+  },{
+  "name": "Nubia Neo 3 GT 5G 12GB 256GB",
+  "company": "Nubia",
+  "img": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/d/i/dien-thoai-nubia-neo-3-gt-12gb-256gb.1.png",
+  "price": "6.590.000",           // bạn điền giá thực tế từ Cellphones
+  "star": 4,
+  "rateCount": 250,           // nếu có số đánh giá thì điền
+  "promo": {
+    "name": "moiramat",
+    "value": "6.990.000"           // giá khuyến mãi nếu có
+  },
+  "detail": {
+    "screen": "AMOLED, 6.8', 120 Hz, Full HD+",
+    "os": "Android (phiên bản tùy theo Cellphones)",
+    "camara": "50 MP + 2 MP (dual camera)",
+    "camaraFront": "16 MP",
+    "cpu": "Unisoc T9100 5G (6 nm) hoặc chip tương đương", 
+    "ram": "12 GB",
+    "rom": "256 GB",
+    "microUSB": "Không (USB-C)",
+    "battery": "6000 mAh"
+  },
+  "masp": "nubia1"
+}
+
 ]
