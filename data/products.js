@@ -1108,7 +1108,7 @@ var list_products = [{
     "img": "https://cdn.tgdd.vn/Products/Images/42/157031/samsung-galaxy-a6-2018-2-600x600.jpg",
     "price": "4.490.000",
     "star": 4,
-    "rateCount": 804,
+    "rateCount": 200,
     "promo": {
         "name": "giareonline",
         "value": "3.990.000"
