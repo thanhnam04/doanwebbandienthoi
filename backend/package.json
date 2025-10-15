@@ -1,0 +1,21 @@
+{
+  "name": "doanwebbandienthoai-backend",
+  "version": "1.0.0",
+  "description": "Backend API for mobile phone e-commerce website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["api", "express", "mobile", "ecommerce"],
+  "author": "",
+  "license": "ISC"
+}
