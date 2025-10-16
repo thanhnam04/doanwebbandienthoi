@@ -118,87 +118,82 @@ async function xoaSanPhamTrongGioHang(masp) {
 	}
 }
 
-function thanhToan() {
-	var c_user = getCurrentUser();
-	if(c_user.off) {
-        alert('Tài khoản của bạn hiện đang bị khóa nên không thể mua hàng!');
-        addAlertBox('Tài khoản của bạn đã bị khóa bởi Admin.', '#aa0000', '#fff', 10000);
-        return;
-	}
-	
-	if (!currentuser.products.length) {
+async function thanhToan() {
+	if (!cartItems.length) {
 		addAlertBox('Không có mặt hàng nào cần thanh toán !!', '#ffb400', '#fff', 2000);
 		return;
 	}
+	
 	if (window.confirm('Thanh toán giỏ hàng ?')) {
-		currentuser.donhang.push({
-			"sp": currentuser.products,
-			"ngaymua": new Date(),
-			"tinhTrang": 'Đang chờ xử lý'
-		});
-		currentuser.products = [];
-		capNhatMoiThu();
+		// Calculate total
+		var totalAmount = 0;
+		for (var item of cartItems) {
+			totalAmount += stringToNum(item.price) * item.quantity;
+		}
+		
+		// Create order
+		const orderData = {
+			userId: currentuser.user.id,
+			items: cartItems,
+			totalAmount: totalAmount
+		};
+		
+		const result = await OrdersAPI.create(orderData);
+		
+		if (result.error) {
+			alert('Lỗi tạo đơn hàng!');
+			return;
+		}
+		
+		// Clear cart
+		await CartAPI.clear(currentuser.user.id);
+		await capNhatMoiThu();
 		addAlertBox('Các sản phẩm đã được gửi vào đơn hàng và chờ xử lý.', '#17c671', '#fff', 4000);
 	}
 }
 
-function xoaHet() {
-	if (currentuser.products.length) {
+async function xoaHet() {
+	if (cartItems.length) {
 		if (window.confirm('Bạn có chắc chắn muốn xóa hết sản phẩm trong giỏ !!')) {
-			currentuser.products = [];
-			capNhatMoiThu();
+			await CartAPI.clear(currentuser.user.id);
+			await capNhatMoiThu();
 		}
 	}
 }
 
-// Cập nhật số lượng lúc nhập số lượng vào input
-function capNhatSoLuongFromInput(inp, masp) {
+async function capNhatSoLuongFromInput(inp, masp) {
 	var soLuongMoi = Number(inp.value);
 	if (!soLuongMoi || soLuongMoi <= 0) soLuongMoi = 1;
 
-	for (var p of currentuser.products) {
-		if (p.ma == masp) {
-			p.soluong = soLuongMoi;
-		}
-	}
-
-	capNhatMoiThu();
+	await CartAPI.update(currentuser.user.id, masp, soLuongMoi);
+	await capNhatMoiThu();
 }
 
-function tangSoLuong(masp) {
-	for (var p of currentuser.products) {
-		if (p.ma == masp) {
-			p.soluong++;
-		}
+async function tangSoLuong(masp) {
+	var item = cartItems.find(i => i.masp === masp);
+	if (item) {
+		await CartAPI.update(currentuser.user.id, masp, item.quantity + 1);
+		await capNhatMoiThu();
 	}
-
-	capNhatMoiThu();
 }
 
-function giamSoLuong(masp) {
-	for (var p of currentuser.products) {
-		if (p.ma == masp) {
-			if (p.soluong > 1) {
-				p.soluong--;
-			} else {
-				return;
-			}
-		}
+async function giamSoLuong(masp) {
+	var item = cartItems.find(i => i.masp === masp);
+	if (item && item.quantity > 1) {
+		await CartAPI.update(currentuser.user.id, masp, item.quantity - 1);
+		await capNhatMoiThu();
 	}
-
-	capNhatMoiThu();
 }
 
-function capNhatMoiThu() { // Mọi thứ
+async function capNhatMoiThu() {
 	animateCartNumber();
 
-	// cập nhật danh sách sản phẩm trong localstorage
-	setCurrentUser(currentuser);
-	updateListUser(currentuser);
+	// Reload cart from API
+	await loadCartFromAPI();
 
-	// cập nhật danh sách sản phẩm ở table
-	addProductToTable(currentuser);
+	// Update table display
+	addProductToTable();
 
-	// Cập nhật trên header
+	// Update header
 	capNhat_ThongTin_CurrentUser();
 }

@@ -2,8 +2,11 @@ var currentUser;
 var tongTienTatCaDonHang = 0; // lưu tổng tiền từ tất cả các đơn hàng đã mua
 var tongSanPhamTatCaDonHang = 0;
 
-window.onload = function () {
+window.onload = async function () {
     khoiTao();
+    
+    // Load products from API
+    window.list_products = await ProductsAPI.getAll();
 
     // autocomplete cho khung tim kiem
     autocomplete(document.getElementById('search-box'), list_products);
@@ -15,18 +18,8 @@ window.onload = function () {
     currentUser = getCurrentUser();
 
     if (currentUser) {
-        // cập nhật từ list user, do trong admin chỉ tác động tới listuser
-        var listUser = getListUser();
-        for (var u of listUser) {
-            if (equalUser(currentUser, u)) {
-                currentUser = u;
-                setCurrentUser(u);
-            }
-        }
-
-        addTatCaDonHang(currentUser); // hàm này cần chạy trước để tính được tổng tiền tất cả đơn hàng 
+        await addTatCaDonHang(currentUser);
         addInfoUser(currentUser);
-    
     } else {
         var warning = `<h2 style="color: red; font-weight:bold; text-align:center; font-size: 2em; padding: 50px;">
                             Bạn chưa đăng nhập !!
@@ -210,8 +203,7 @@ function changeInfo(iTag, info) {
 }
 
 
-// Phần thông tin đơn hàng
-function addTatCaDonHang(user) {
+async function addTatCaDonHang(user) {
     if (!user) {
         document.getElementsByClassName('listDonHang')[0].innerHTML = `
             <h3 style="width=100%; padding: 50px; color: red; font-size: 2em; text-align: center"> 
@@ -219,26 +211,31 @@ function addTatCaDonHang(user) {
             </h3>`;
         return;
     }
-    if (!user.donhang.length) {
+    
+    // Get orders from API
+    const orders = await OrdersAPI.getUserOrders(user.user.id);
+    
+    if (!orders.length) {
         document.getElementsByClassName('listDonHang')[0].innerHTML = `
             <h3 style="width=100%; padding: 50px; color: green; font-size: 2em; text-align: center"> 
-                Xin chào ` + currentUser.username + `. Bạn chưa có đơn hàng nào.
+                Xin chào ` + user.user.username + `. Bạn chưa có đơn hàng nào.
             </h3>`;
         return;
     }
-    for (var dh of user.donhang) {
-        addDonHang(dh);
+    
+    for (var order of orders) {
+        addDonHang(order);
     }
 }
 
-function addDonHang(dh) {
+function addDonHang(order) {
     var div = document.getElementsByClassName('listDonHang')[0];
 
     var s = `
             <table class="listSanPham">
                 <tr> 
                     <th colspan="6">
-                        <h3 style="text-align:center;"> Đơn hàng ngày: ` + new Date(dh.ngaymua).toLocaleString() + `</h3> 
+                        <h3 style="text-align:center;"> Đơn hàng ngày: ` + new Date(order.created_at).toLocaleString() + `</h3> 
                     </th>
                 </tr>
                 <tr>
@@ -247,45 +244,48 @@ function addDonHang(dh) {
                     <th>Giá</th>
                     <th>Số lượng</th>
                     <th>Thành tiền</th>
-                    <th>Thời gian thêm vào giỏ</th> 
+                    <th>Trạng thái</th> 
                 </tr>`;
 
-    var totalPrice = 0;
-    for (var i = 0; i < dh.sp.length; i++) {
-        var masp = dh.sp[i].ma;
-        var soluongSp = dh.sp[i].soluong;
-        var p = timKiemTheoMa(list_products, masp);
-        var price = (p.promo.name == 'giareonline' ? p.promo.value : p.price);
-        var thoigian = new Date(dh.sp[i].date).toLocaleString();
-        var thanhtien = stringToNum(price) * soluongSp;
+    if (order.items) {
+        var items = order.items.split(',');
+        for (var i = 0; i < items.length; i++) {
+            var itemData = items[i].split(':');
+            var masp = itemData[0];
+            var quantity = parseInt(itemData[1]);
+            var price = itemData[2];
+            
+            var p = timKiemTheoMa(list_products, masp);
+            if (!p) continue;
+            
+            var thanhtien = stringToNum(price) * quantity;
 
-        s += `
-                <tr>
-                    <td>` + (i + 1) + `</td>
-                    <td class="noPadding imgHide">
-                        <a target="_blank" href="chitietsanpham.html?` + p.name.split(' ').join('-') + `" title="Xem chi tiết">
-                            ` + p.name + `
-                            <img src="` + p.img + `">
-                        </a>
-                    </td>
-                    <td class="alignRight">` + price + ` ₫</td>
-                    <td class="soluong" >
-                         ` + soluongSp + `
-                    </td>
-                    <td class="alignRight">` + numToString(thanhtien) + ` ₫</td>
-                    <td style="text-align: center" >` + thoigian + `</td>
-                </tr>
-            `;
-        totalPrice += thanhtien;
-        tongSanPhamTatCaDonHang += soluongSp;
+            s += `
+                    <tr>
+                        <td>` + (i + 1) + `</td>
+                        <td class="noPadding imgHide">
+                            <a target="_blank" href="chitietsanpham.html?` + p.name.split(' ').join('-') + `" title="Xem chi tiết">
+                                ` + p.name + `
+                                <img src="` + p.img + `">
+                            </a>
+                        </td>
+                        <td class="alignRight">` + price + ` ₫</td>
+                        <td class="soluong">` + quantity + `</td>
+                        <td class="alignRight">` + numToString(thanhtien) + ` ₫</td>
+                        <td style="text-align: center">` + order.status + `</td>
+                    </tr>
+                `;
+            tongSanPhamTatCaDonHang += quantity;
+        }
     }
-    tongTienTatCaDonHang += totalPrice;
+    
+    tongTienTatCaDonHang += order.total_amount;
 
     s += `
                 <tr style="font-weight:bold; text-align:center; height: 4em;">
                     <td colspan="4">TỔNG TIỀN: </td>
-                    <td class="alignRight">` + numToString(totalPrice) + ` ₫</td>
-                    <td > ` + dh.tinhTrang + ` </td>
+                    <td class="alignRight">` + numToString(order.total_amount) + ` ₫</td>
+                    <td>` + order.status + `</td>
                 </tr>
             </table>
             <hr>
