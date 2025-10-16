@@ -3,6 +3,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 
+// Import routes
+const authRoutes = require('./auth');
+const orderRoutes = require('./orders');
+const adminRoutes = require('./admin');
+const db = require('./database');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -123,6 +129,11 @@ app.delete('/api/cart/:userId', (req, res) => {
   carts[userId] = [];
   res.json(carts[userId]);
 });
+
+// Use routes
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname, '..')));
