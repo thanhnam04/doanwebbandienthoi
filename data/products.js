@@ -1869,3 +1869,5 @@ var list_products = [{
 }
 
 ]
+
+module.exports = list_products;

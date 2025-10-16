@@ -1,6 +1,11 @@
-var currentuser; // user hiện tại, biến toàn cục
-window.onload = function () {
+var currentuser;
+var cartItems = [];
+
+window.onload = async function () {
     khoiTao();
+    
+    // Load products from API
+    window.list_products = await ProductsAPI.getAll();
 
 	// autocomplete cho khung tim kiem
 	autocomplete(document.getElementById('search-box'), list_products);
@@ -10,10 +15,17 @@ window.onload = function () {
 	for (var t of tags) addTags(t, "index.html?search=" + t)
 
 	currentuser = getCurrentUser();
-	addProductToTable(currentuser);
+	await loadCartFromAPI();
+	addProductToTable();
 }
 
-function addProductToTable(user) {
+async function loadCartFromAPI() {
+    if (currentuser && currentuser.user) {
+        cartItems = await CartAPI.get(currentuser.user.id);
+    }
+}
+
+function addProductToTable() {
 	var table = document.getElementsByClassName('listSanPham')[0];
 
 	var s = `
@@ -28,7 +40,7 @@ function addProductToTable(user) {
 				<th>Xóa</th>
 			</tr>`;
 
-	if (!user) {
+	if (!currentuser) {
 		s += `
 			<tr>
 				<td colspan="7"> 
@@ -40,7 +52,7 @@ function addProductToTable(user) {
 		`;
 		table.innerHTML = s;
 		return;
-	} else if (user.products.length == 0) {
+	} else if (cartItems.length == 0) {
 		s += `
 			<tr>
 				<td colspan="7"> 
@@ -55,35 +67,34 @@ function addProductToTable(user) {
 	}
 
 	var totalPrice = 0;
-	for (var i = 0; i < user.products.length; i++) {
-		var masp = user.products[i].ma;
-		var soluongSp = user.products[i].soluong;
-		var p = timKiemTheoMa(list_products, masp);
+	for (var i = 0; i < cartItems.length; i++) {
+		var item = cartItems[i];
+		var p = timKiemTheoMa(list_products, item.masp);
+		if (!p) continue;
+		
 		var price = (p.promo.name == 'giareonline' ? p.promo.value : p.price);
-		var thoigian = new Date(user.products[i].date).toLocaleString();
-		var thanhtien = stringToNum(price) * soluongSp;
+		var thanhtien = stringToNum(price) * item.quantity;
 
 		s += `
 			<tr>
 				<td>` + (i + 1) + `</td>
 				<td class="noPadding imgHide">
 					<a target="_blank" href="chitietsanpham.html?` + p.name.split(' ').join('-') + `" title="Xem chi tiết">
-						` + p.name + `
-						<img src="` + p.img + `">
+						` + item.name + `
+						<img src="` + item.img + `">
 					</a>
 				</td>
-				<td class="alignRight">` + price + ` ₫</td>
+				<td class="alignRight">` + item.price + ` ₫</td>
 				<td class="soluong" >
-					<button onclick="giamSoLuong('` + masp + `')"><i class="fa fa-minus"></i></button>
-					<input size="1" onchange="capNhatSoLuongFromInput(this, '` + masp + `')" value=` + soluongSp + `>
-					<button onclick="tangSoLuong('` + masp + `')"><i class="fa fa-plus"></i></button>
+					<button onclick="giamSoLuong('` + item.masp + `')"><i class="fa fa-minus"></i></button>
+					<input size="1" onchange="capNhatSoLuongFromInput(this, '` + item.masp + `')" value=` + item.quantity + `>
+					<button onclick="tangSoLuong('` + item.masp + `')"><i class="fa fa-plus"></i></button>
 				</td>
 				<td class="alignRight">` + numToString(thanhtien) + ` ₫</td>
-				<td style="text-align: center" >` + thoigian + `</td>
-				<td class="noPadding"> <i class="fa fa-trash" onclick="xoaSanPhamTrongGioHang(` + i + `)"></i> </td>
+				<td style="text-align: center" >-</td>
+				<td class="noPadding"> <i class="fa fa-trash" onclick="xoaSanPhamTrongGioHang('` + item.masp + `')"></i> </td>
 			</tr>
 		`;
-		// Chú ý nháy cho đúng ở giamsoluong, tangsoluong
 		totalPrice += thanhtien;
 	}
 
@@ -100,10 +111,10 @@ function addProductToTable(user) {
 	table.innerHTML = s;
 }
 
-function xoaSanPhamTrongGioHang(i) {
+async function xoaSanPhamTrongGioHang(masp) {
 	if (window.confirm('Xác nhận hủy mua')) {
-		currentuser.products.splice(i, 1);
-		capNhatMoiThu();
+		await CartAPI.remove(currentuser.user.id, masp);
+		await capNhatMoiThu();
 	}
 }
 

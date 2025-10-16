@@ -106,50 +106,32 @@ function animateCartNumber() {
     }, 1200);
 }
 
-function themVaoGioHang(masp, tensp) {
+async function themVaoGioHang(masp, tensp) {
     var user = getCurrentUser();
     if (!user) {
         alert('Bạn cần đăng nhập để mua hàng !');
         showTaiKhoan(true);
         return;
     }
-    if (user.off) {
-        alert('Tài khoản của bạn hiện đang bị khóa nên không thể mua hàng!');
-        addAlertBox('Tài khoản của bạn đã bị khóa bởi Admin.', '#aa0000', '#fff', 10000);
-        return;
+
+    try {
+        await CartAPI.add(user.user.id, masp, 1);
+        
+        animateCartNumber();
+        addAlertBox('Đã thêm ' + tensp + ' vào giỏ.', '#17c671', '#fff', 3500);
+        
+        capNhat_ThongTin_CurrentUser();
+        
+    } catch (error) {
+        alert('Lỗi thêm vào giỏ hàng!');
     }
-    var t = new Date();
-    var daCoSanPham = false;;
-
-    for (var i = 0; i < user.products.length; i++) { // check trùng sản phẩm
-        if (user.products[i].ma == masp) {
-            user.products[i].soluong++;
-            daCoSanPham = true;
-            break;
-        }
-    }
-
-    if (!daCoSanPham) { // nếu không trùng thì mới thêm sản phẩm vào user.products
-        user.products.push({
-            "ma": masp,
-            "soluong": 1,
-            "date": t
-        });
-    }
-
-    animateCartNumber();
-    addAlertBox('Đã thêm ' + tensp + ' vào giỏ.', '#17c671', '#fff', 3500);
-
-    setCurrentUser(user); // cập nhật giỏ hàng cho user hiện tại
-    updateListUser(user); // cập nhật list user
-    capNhat_ThongTin_CurrentUser(); // cập nhật giỏ hàng
 }
 
 // ============================== TÀI KHOẢN ============================
 
 // Hàm get set cho người dùng hiện tại đã đăng nhập
 function getCurrentUser() {
-    return JSON.parse(window.localStorage.getItem('CurrentUser')); // Lấy dữ liệu từ localstorage
+    return UserSession.getCurrentUser();
 }
 
 function setCurrentUser(u) {
@@ -181,88 +163,68 @@ function updateListUser(u, newData) {
     setListUser(list);
 }
 
-function logIn(form) {
-    // Lấy dữ liệu từ form
-    var name = form.username.value;
-    var pass = form.pass.value;
-    var newUser = new User(name, pass);
+async function logIn(form) {
+    var username = form.username.value;
+    var password = form.pass.value;
 
-    // Lấy dữ liệu từ danh sách người dùng localstorage
-    var listUser = getListUser();
-
-    // Kiểm tra xem dữ liệu form có khớp với người dùng nào trong danh sách ko
-    for (var u of listUser) {
-        if (equalUser(newUser, u)) {
-            if(u.off) {
-                alert('Tài khoản này đang bị khoá. Không thể đăng nhập.');
-                return false;
-            }
-
-            setCurrentUser(u);
-
-            // Reload lại trang -> sau khi reload sẽ cập nhật luôn giỏ hàng khi hàm setupEventTaiKhoan chạy
-            location.reload();
+    try {
+        const result = await AuthAPI.login(username, password);
+        
+        if (result.error) {
+            alert('Nhập sai tên hoặc mật khẩu !!!');
+            form.username.focus();
             return false;
         }
-    }
 
-    // Đăng nhập vào admin
-    for (var ad of adminInfo) {
-        if (equalUser(newUser, ad)) {
-            alert('Xin chào admin .. ');
-            window.localStorage.setItem('admin', true);
+        // Save user session
+        UserSession.login(result);
+        
+        if (result.user.role === 'admin') {
+            alert('Xin chào admin ..');
             window.location.assign('admin.html');
-            return false;
+        } else {
+            location.reload();
         }
+        
+    } catch (error) {
+        alert('Lỗi kết nối. Vui lòng thử lại!');
     }
-
-    // Trả về thông báo nếu không khớp
-    alert('Nhập sai tên hoặc mật khẩu !!!');
-    form.username.focus();
+    
     return false;
 }
 
-function signUp(form) {
-    var ho = form.ho.value;
-    var ten = form.ten.value;
-    var email = form.email.value;
-    var username = form.newUser.value;
-    var pass = form.newPass.value;
-    var newUser = new User(username, pass, ho, ten, email);
+async function signUp(form) {
+    var userData = {
+        username: form.newUser.value,
+        password: form.newPass.value,
+        email: form.email.value,
+        fullname: form.ho.value + ' ' + form.ten.value,
+        phone: '',
+        address: ''
+    };
 
-    // Lấy dữ liệu các khách hàng hiện có
-    var listUser = getListUser();
-
-    // Kiểm tra trùng admin
-    for (var ad of adminInfo) {
-        if (newUser.username == ad.username) {
+    try {
+        const result = await AuthAPI.register(userData);
+        
+        if (result.error) {
             alert('Tên đăng nhập đã có người sử dụng !!');
             return false;
         }
+
+        alert('Đăng kí thành công! Bạn có thể đăng nhập ngay bây giờ.');
+        
+        // Switch to login tab
+        document.querySelector('.tab a[href="#login"]').click();
+        
+    } catch (error) {
+        alert('Lỗi kết nối. Vui lòng thử lại!');
     }
-
-    // Kiểm tra xem dữ liệu form có trùng với khách hàng đã có không
-    for (var u of listUser) {
-        if (newUser.username == u.username) {
-            alert('Tên đăng nhập đã có người sử dụng !!');
-            return false;
-        }
-    }
-
-    // Lưu người mới vào localstorage
-    listUser.push(newUser);
-    window.localStorage.setItem('ListUser', JSON.stringify(listUser));
-
-    // Đăng nhập vào tài khoản mới tạo
-    window.localStorage.setItem('CurrentUser', JSON.stringify(newUser));
-    alert('Đăng kí thành công, Bạn sẽ được tự động đăng nhập!');
-    location.reload();
-
+    
     return false;
 }
 
 function logOut() {
-    window.localStorage.removeItem('CurrentUser');
+    UserSession.logout();
     location.reload();
 }
 
@@ -342,14 +304,18 @@ function setupEventTaiKhoan() {
 }
 
 // Cập nhật số lượng hàng trong giỏ hàng + Tên current user
-function capNhat_ThongTin_CurrentUser() {
+async function capNhat_ThongTin_CurrentUser() {
     var u = getCurrentUser();
-    if (u) {
+    if (u && u.user) {
+        // Get cart count from API
+        const cart = await CartAPI.get(u.user.id);
+        const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
         // Cập nhật số lượng hàng vào header
-        document.getElementsByClassName('cart-number')[0].innerHTML = getTongSoLuongSanPhamTrongGioHang(u);
+        document.getElementsByClassName('cart-number')[0].innerHTML = cartCount;
         // Cập nhật tên người dùng
         document.getElementsByClassName('member')[0]
-            .getElementsByTagName('a')[0].childNodes[2].nodeValue = ' ' + u.username;
+            .getElementsByTagName('a')[0].childNodes[2].nodeValue = ' ' + u.user.username;
         // bỏ class hide của menu người dùng
         document.getElementsByClassName('menuMember')[0]
             .classList.remove('hide');

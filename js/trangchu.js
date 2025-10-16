@@ -1,5 +1,8 @@
-window.onload = function () {
+window.onload = async function () {
 	khoiTao();
+	
+	// Load products from API
+	window.list_products = await ProductsAPI.getAll();
 
 	// Thêm hình vào banner
 // Thêm hình vào banner
