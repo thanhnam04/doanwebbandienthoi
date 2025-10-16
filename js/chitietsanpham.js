@@ -2,14 +2,19 @@ var nameProduct, maProduct, sanPhamHienTai; // Tên sản phẩm trong trang nà
 // là biến toàn cục để có thể dùng ở bát cứ đâu trong trang
 // không cần tính toán lấy tên từ url nhiều lần
 
-window.onload = function () {
+window.onload = async function () {
     khoiTao();
+
+    // Load products from API
+    if (typeof ProductsAPI !== 'undefined') {
+        window.list_products = await ProductsAPI.getAll();
+    }
 
     // thêm tags (từ khóa) vào khung tìm kiếm
     var tags = ["Samsung", "iPhone", "Huawei", "Oppo", "Mobi"];
     for (var t of tags) addTags(t, "index.html?search=" + t, true);
 
-    phanTich_URL_chiTietSanPham();
+    await phanTich_URL_chiTietSanPham();
 
     // autocomplete cho khung tim kiem
     autocomplete(document.getElementById('search-box'), list_products);
@@ -23,7 +28,7 @@ function khongTimThaySanPham() {
     document.getElementsByClassName('chitietSanpham')[0].style.display = 'none';
 }
 
-function phanTich_URL_chiTietSanPham() {
+async function phanTich_URL_chiTietSanPham() {
     nameProduct = window.location.href.split('?')[1]; // lấy tên
     if(!nameProduct) return khongTimThaySanPham();
 
@@ -31,6 +36,7 @@ function phanTich_URL_chiTietSanPham() {
     // code này làm ngược lại so với lúc tạo href cho sản phẩm trong file classes.js
     nameProduct = nameProduct.split('-').join(' ');
 
+    // Tìm sản phẩm theo tên trong danh sách đã load
     for(var p of list_products) {
         if(nameProduct == p.name) {
             maProduct = p.masp;
@@ -38,8 +44,16 @@ function phanTich_URL_chiTietSanPham() {
         }
     }
 
-    sanPhamHienTai = timKiemTheoMa(list_products, maProduct);
-    if(!sanPhamHienTai) return khongTimThaySanPham();
+    if(!maProduct) return khongTimThaySanPham();
+
+    // Gọi API để lấy chi tiết sản phẩm
+    try {
+        sanPhamHienTai = await ProductsAPI.getById(maProduct);
+        if(sanPhamHienTai.error) return khongTimThaySanPham();
+    } catch (error) {
+        console.error('Lỗi load sản phẩm:', error);
+        return khongTimThaySanPham();
+    }
 
     var divChiTiet = document.getElementsByClassName('chitietSanpham')[0];
 

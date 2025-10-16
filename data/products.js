@@ -1870,4 +1870,7 @@ var list_products = [{
 
 ]
 
-module.exports = list_products;
+// Export for Node.js (backend)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = list_products;
+}

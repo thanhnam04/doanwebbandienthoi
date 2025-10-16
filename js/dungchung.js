@@ -180,6 +180,8 @@ async function logIn(form) {
         UserSession.login(result);
         
         if (result.user.role === 'admin') {
+            // Set admin flag for admin page
+            window.localStorage.setItem('admin', 'true');
             alert('Xin chào admin ..');
             window.location.assign('admin.html');
         } else {
@@ -225,6 +227,8 @@ async function signUp(form) {
 
 function logOut() {
     UserSession.logout();
+    // Remove admin flag
+    window.localStorage.removeItem('admin');
     location.reload();
 }
 
@@ -346,6 +350,7 @@ function numToString(num, char) {
 }
 
 function stringToNum(str, char) {
+    if (!str || typeof str !== 'string') return 0;
     return Number(str.split(char || '.').join(''));
 }
 

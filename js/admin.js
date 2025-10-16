@@ -1,17 +1,22 @@
 var TONGTIEN = 0;
 
-window.onload = function () {
-    // get data từ localstorage
-    list_products = getListProducts() || list_products;
+window.onload = async function () {
+    // Load products from API
+    if (typeof ProductsAPI !== 'undefined') {
+        window.list_products = await ProductsAPI.getAll();
+    } else {
+        // Fallback to localStorage
+        list_products = getListProducts() || list_products;
+    }
     adminInfo = getListAdmin() || adminInfo;
 
     addEventChangeTab();
 
     if (window.localStorage.getItem('admin')) {
         addTableProducts();
-        addTableDonHang();
-        addTableKhachHang();
-        addThongKe();
+        await addTableDonHang();
+        await addTableKhachHang();
+        await addThongKe();
 
         openTab('Trang Chủ')
     } else {
@@ -73,8 +78,18 @@ function createChartConfig(
     };
 }
 
-function addThongKe() {
-    var danhSachDonHang = getListDonHang(true);
+async function addThongKe() {
+    // Get stats from API
+    var danhSachDonHang = [];
+    try {
+        const stats = await AdminAPI.getStats();
+        console.log('Stats loaded:', stats);
+        // Use stats data or fallback to localStorage
+        danhSachDonHang = stats.orders || getListDonHang(true);
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        danhSachDonHang = getListDonHang(true); // Fallback
+    }
 
     var thongKeHang = {}; // Thống kê hãng
 
@@ -188,7 +203,7 @@ function addTableProducts() {
             <td style="width: 10%">` + p.masp + `</td>
             <td style="width: 40%">
                 <a title="Xem chi tiết" target="_blank" href="chitietsanpham.html?` + p.name.split(' ').join('-') + `">` + p.name + `</a>
-                <img src="` + p.img + `"></img>
+                <img src="` + (p.img || '') + `" onerror="this.style.display='none'"></img>
             </td>
             <td style="width: 15%">` + p.price + `</td>
             <td style="width: 15%">` + promoToStringValue(p.promo) + `</td>
@@ -432,7 +447,7 @@ function addKhungSuaSanPham(masp) {
         <tr>
             <td>Hình:</td>
             <td>
-                <img class="hinhDaiDien" id="anhDaiDienSanPhamSua" src="`+sp.img+`">
+                <img class="hinhDaiDien" id="anhDaiDienSanPhamSua" src="`+(sp.img || '')+`" onerror="this.style.display='none'">
                 <input type="file" accept="image/*" onchange="capNhatAnhSanPham(this.files, 'anhDaiDienSanPhamSua')">
             </td>
         </tr>
@@ -514,16 +529,13 @@ function addKhungSuaSanPham(masp) {
 
 // Cập nhật ảnh sản phẩm
 function capNhatAnhSanPham(files, id) {
-    // var url = '';
-    // if(files.length) url = window.URL.createObjectURL(files[0]);
-    
-    // document.getElementById(id).src = url;
-
     const reader = new FileReader();
     reader.addEventListener("load", function () {
         // convert image file to base64 string
         previewSrc = reader.result;
-        document.getElementById(id).src = previewSrc;
+        const img = document.getElementById(id);
+        img.src = previewSrc;
+        img.style.display = 'block';
     }, false);
 
     if (files[0]) {
@@ -555,11 +567,21 @@ function getValueOfTypeInTable_SanPham(tr, loai) {
 
 // ========================= Đơn Hàng ===========================
 // Vẽ bảng
-function addTableDonHang() {
+async function addTableDonHang() {
+    console.log('addTableDonHang called');
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
     var s = `<table class="table-outline hideImg">`;
 
-    var listDH = getListDonHang();
+    // Get orders from API
+    var listDH = [];
+    try {
+        console.log('Calling AdminAPI.getOrders()');
+        listDH = await AdminAPI.getOrders();
+        console.log('Orders loaded:', listDH);
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        listDH = getListDonHang(); // Fallback to localStorage
+    }
 
     TONGTIEN = 0;
     for (var i = 0; i < listDH.length; i++) {
@@ -584,7 +606,11 @@ function addTableDonHang() {
                 
             </td>
         </tr>`;
-        TONGTIEN += stringToNum(d.tongtien);
+        if (d.tongtien && typeof d.tongtien === 'string') {
+            TONGTIEN += stringToNum(d.tongtien);
+        } else if (typeof d.tongtien === 'number') {
+            TONGTIEN += d.tongtien;
+        }
     }
 
     s += `</table>`;
@@ -734,11 +760,18 @@ function getValueOfTypeInTable_DonHang(tr, loai) {
 
 // ====================== Khách Hàng =============================
 // Vẽ bảng
-function addTableKhachHang() {
+async function addTableKhachHang() {
     var tc = document.getElementsByClassName('khachhang')[0].getElementsByClassName('table-content')[0];
     var s = `<table class="table-outline hideImg">`;
 
-    var listUser = getListUser();
+    // Get users from API
+    var listUser = [];
+    try {
+        listUser = await AdminAPI.getUsers();
+    } catch (error) {
+        console.error('Error loading users:', error);
+        listUser = getListUser(); // Fallback to localStorage
+    }
 
     for (var i = 0; i < listUser.length; i++) {
         var u = listUser[i];

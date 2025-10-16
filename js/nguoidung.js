@@ -18,6 +18,17 @@ window.onload = async function () {
     currentUser = getCurrentUser();
 
     if (currentUser) {
+        // Load user profile from API
+        try {
+            const userProfile = await AuthAPI.getProfile(currentUser.user.id);
+            if (!userProfile.error) {
+                // Merge API data with current user
+                currentUser.user = { ...currentUser.user, ...userProfile };
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+        }
+        
         await addTatCaDonHang(currentUser);
         addInfoUser(currentUser);
     } else {
@@ -39,7 +50,7 @@ function addInfoUser(user) {
         </tr>
         <tr>
             <td>Tài khoản: </td>
-            <td> <input type="text" value="` + user.username + `" readonly> </td>
+            <td> <input type="text" value="` + (user.user.username || user.username) + `" readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'username')"></i> </td>
         </tr>
         <tr>
@@ -74,19 +85,19 @@ function addInfoUser(user) {
             </td>
         </tr>
         <tr>
-            <td>Họ: </td>
-            <td> <input type="text" value="` + user.ho + `" readonly> </td>
-            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ho')"></i> </td>
-        </tr>
-        <tr>
-            <td>Tên: </td>
-            <td> <input type="text" value="` + user.ten + `" readonly> </td>
-            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ten')"></i> </td>
+            <td>Họ tên: </td>
+            <td> <input type="text" value="` + (user.user.fullname || user.fullname || '') + `" readonly> </td>
+            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'fullname')"></i> </td>
         </tr>
         <tr>
             <td>Email: </td>
-            <td> <input type="text" value="` + user.email + `" readonly> </td>
+            <td> <input type="text" value="` + (user.user.email || user.email || '') + `" readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'email')"></i> </td>
+        </tr>
+        <tr>
+            <td>Số điện thoại: </td>
+            <td> <input type="text" value="` + (user.user.phone || user.phone || '') + `" readonly> </td>
+            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'phone')"></i> </td>
         </tr>
         <tr>
             <td colspan="3" style="padding:5px; border-top: 2px solid #ccc;"></td>
@@ -181,13 +192,31 @@ function changeInfo(iTag, info) {
 
         var temp = copyObject(currentUser);
         currentUser[info] = inp.value;
-
-        // cập nhật danh sách sản phẩm trong localstorage
-        setCurrentUser(currentUser);
-        updateListUser(temp, currentUser);
-
-        // Cập nhật trên header
-        capNhat_ThongTin_CurrentUser();
+        
+        // Update profile via API
+        const updateData = {};
+        updateData[info] = inp.value;
+        
+        AuthAPI.updateProfile(currentUser.user.id, updateData)
+            .then(result => {
+                if (result.error) {
+                    alert('Lỗi cập nhật thông tin!');
+                    return;
+                }
+                
+                // cập nhật danh sách sản phẩm trong localstorage
+                setCurrentUser(currentUser);
+                updateListUser(temp, currentUser);
+        
+                // Cập nhật trên header
+                capNhat_ThongTin_CurrentUser();
+                
+                addAlertBox('Cập nhật thông tin thành công!', '#5f5', '#000', 3000);
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                alert('Lỗi cập nhật thông tin!');
+            });
 
         iTag.innerHTML = '';
 
