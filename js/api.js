@@ -76,6 +76,27 @@ const ProductsAPI = {
             console.error('Get product error:', error);
             return { error: 'Product not found' };
         }
+    },
+
+    async search(searchTerm) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/products?search=${encodeURIComponent(searchTerm)}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Search products error:', error);
+            return [];
+        }
+    },
+
+    async filter(filters) {
+        try {
+            const params = new URLSearchParams(filters);
+            const response = await fetch(`${API_BASE_URL}/products?${params}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Filter products error:', error);
+            return [];
+        }
     }
 };
 

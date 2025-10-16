@@ -1,3 +1,35 @@
+// Search function using API
+async function searchProducts(form) {
+	var searchTerm = form.search.value.trim();
+	if (!searchTerm) return false;
+	
+	try {
+		// Call API to search products
+		const results = await ProductsAPI.search(searchTerm);
+		
+		// Clear current products
+		clearAllProducts();
+		
+		// Show products container
+		document.getElementsByClassName('contain-products')[0].style.display = '';
+		
+		if (results.length > 0) {
+			// Add search results
+			addProductsFrom(results);
+			alertNotHaveProduct(true);
+		} else {
+			// No products found
+			alertNotHaveProduct(false);
+		}
+		
+	} catch (error) {
+		console.error('Search error:', error);
+		alert('Lỗi tìm kiếm!');
+	}
+	
+	return false; // Prevent form submission
+}
+
 window.onload = async function () {
 	khoiTao();
 	

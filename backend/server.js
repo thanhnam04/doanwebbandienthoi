@@ -25,9 +25,43 @@ let carts = {};
 
 // Routes
 
-// Get all products
+// Get all products with optional search and filters
 app.get('/api/products', (req, res) => {
-  res.json(products);
+  let result = [...products];
+  
+  // Search by name or company
+  if (req.query.search) {
+    const query = req.query.search.toLowerCase();
+    result = result.filter(p =>
+      p.name.toLowerCase().includes(query) ||
+      p.company.toLowerCase().includes(query)
+    );
+  }
+  
+  // Filter by company
+  if (req.query.company) {
+    result = result.filter(p =>
+      p.company.toLowerCase() === req.query.company.toLowerCase()
+    );
+  }
+  
+  // Filter by price range
+  if (req.query.minPrice || req.query.maxPrice) {
+    const minPrice = parseInt(req.query.minPrice) || 0;
+    const maxPrice = parseInt(req.query.maxPrice) || Infinity;
+    result = result.filter(p => {
+      const price = parseInt(p.price.replace(/\./g, ''));
+      return price >= minPrice && price <= maxPrice;
+    });
+  }
+  
+  // Filter by star rating
+  if (req.query.star) {
+    const minStar = parseInt(req.query.star);
+    result = result.filter(p => p.star >= minStar);
+  }
+  
+  res.json(result);
 });
 
 // Get product by masp
