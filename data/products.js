@@ -1867,7 +1867,6 @@ var list_products = [{
   },
   "masp": "nubia1"
 }
-
 ]
 
 module.exports = list_products;
