@@ -53,20 +53,40 @@ router.get('/users', (req, res) => {
 
 // Delete user
 router.delete('/users/:userId', (req, res) => {
-  db.run(
-    'DELETE FROM users WHERE id = ? AND role != "admin"',
-    [req.params.userId],
-    function(err) {
-      if (err) {
-        return res.status(400).json({ error: 'Failed to delete user' });
+  const userId = req.params.userId;
+  
+  // Delete user and cascade delete orders and order_items
+  db.serialize(() => {
+    db.run('DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)', [userId]);
+    db.run('DELETE FROM orders WHERE user_id = ?', [userId]);
+    db.run(
+      'DELETE FROM users WHERE id = ? AND role != "admin"',
+      [userId],
+      function(err) {
+        if (err) {
+          return res.status(400).json({ error: 'Failed to delete user' });
+        }
+        
+        // Clear cart from server memory  
+        try {
+          const serverModule = require('./server');
+          if (serverModule.carts && serverModule.carts[userId]) {
+            delete serverModule.carts[userId];
+          }
+        } catch (e) {
+          console.log('Could not clear cart from memory:', e.message);
+        }
+        
+        res.json({ message: 'User deleted successfully' });
       }
-      res.json({ message: 'User deleted successfully' });
-    }
-  );
+    );
+  });
 });
 
 // Get statistics
 router.get('/stats', (req, res) => {
+  console.log('Getting stats...');
+  
   db.all(
     `SELECT 
        COUNT(DISTINCT o.id) as total_orders,
@@ -76,8 +96,11 @@ router.get('/stats', (req, res) => {
      WHERE o.status = 'Đã giao hàng'`,
     (err, stats) => {
       if (err) {
+        console.error('Stats query error:', err);
         return res.status(400).json({ error: 'Failed to get stats' });
       }
+      
+      console.log('Basic stats:', stats[0]);
       
       // Get company stats - only from completed orders
       db.all(
@@ -88,8 +111,11 @@ router.get('/stats', (req, res) => {
          GROUP BY oi.masp`,
         (err, productStats) => {
           if (err) {
+            console.error('Product stats query error:', err);
             return res.status(400).json({ error: 'Failed to get product stats' });
           }
+          
+          console.log('Product stats from DB:', productStats);
           
           // Calculate company stats
           const companyStats = {};
@@ -104,6 +130,8 @@ router.get('/stats', (req, res) => {
               companyStats[company].revenue += stat.revenue;
             }
           });
+          
+          console.log('Final company stats:', companyStats);
           
           res.json({
             ...stats[0],

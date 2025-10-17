@@ -23,6 +23,9 @@ const products = require('../data/products.js');
 // In-memory cart storage (in production, use database)
 let carts = {};
 
+// Export carts for admin access
+module.exports.carts = carts;
+
 // Routes
 
 // Get all products with optional search and filters
@@ -211,3 +214,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+module.exports.carts = carts;

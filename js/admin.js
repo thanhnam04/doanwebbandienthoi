@@ -50,9 +50,19 @@ function getListRandomColor(length) {
     return result;
 }
 
+// Store chart instances globally
+window.chartInstances = window.chartInstances || {};
+
 function addChart(id, chartOption) {
     var ctx = document.getElementById(id).getContext('2d');
-    var chart = new Chart(ctx, chartOption);
+    
+    // Destroy existing chart if it exists
+    if (window.chartInstances[id]) {
+        window.chartInstances[id].destroy();
+    }
+    
+    // Create new chart
+    window.chartInstances[id] = new Chart(ctx, chartOption);
 }
 
 function createChartConfig(
@@ -100,12 +110,9 @@ async function addThongKe() {
         // Use company_stats from API response
         var thongKeHang = stats.company_stats || {};
         
-        // If no company stats, create empty object
+        // If no company stats, create empty object with all zeros
         if (Object.keys(thongKeHang).length === 0) {
-            thongKeHang = {
-                'Apple': { sold_count: 0, revenue: 0 },
-                'Samsung': { sold_count: 0, revenue: 0 }
-            };
+            thongKeHang = {};
         }
         
         // Convert API format to chart format
@@ -121,33 +128,65 @@ async function addThongKe() {
         
     } catch (error) {
         console.error('Error loading stats:', error);
-        // Fallback data
-        thongKeHang = {
-            'Apple': { soLuongBanRa: 0, doanhThu: 0 },
-            'Samsung': { soLuongBanRa: 0, doanhThu: 0 }
-        };
+        // Fallback data - empty
+        thongKeHang = {};
     }
 
 
-    // Lấy mảng màu ngẫu nhiên để vẽ đồ thị
-    let colors = getListRandomColor(Object.keys(thongKeHang).length);
+    // Check if there's any data
+    const hasData = Object.keys(thongKeHang).length > 0;
+    
+    if (hasData) {
+        // Lấy mảng màu ngẫu nhiên để vẽ đồ thị
+        let colors = getListRandomColor(Object.keys(thongKeHang).length);
 
-    // Thêm thống kê
-    addChart('myChart1', createChartConfig(
-        'Số lượng bán ra',
-        'bar', 
-        Object.keys(thongKeHang), 
-        Object.values(thongKeHang).map(_ =>  _.soLuongBanRa),
-        colors,
-    ));
+        // Thêm thống kê
+        addChart('myChart1', createChartConfig(
+            'Số lượng bán ra',
+            'pie', 
+            Object.keys(thongKeHang), 
+            Object.values(thongKeHang).map(_ =>  _.soLuongBanRa),
+            colors,
+        ));
 
-    addChart('myChart2', createChartConfig(
-        'Doanh thu',
-        'doughnut', 
-        Object.keys(thongKeHang), 
-        Object.values(thongKeHang).map(_ =>  _.doanhThu),
-        colors,
-    ));
+        addChart('myChart2', createChartConfig(
+            'Doanh thu',
+            'doughnut', 
+            Object.keys(thongKeHang), 
+            Object.values(thongKeHang).map(_ =>  _.doanhThu),
+            colors,
+        ));
+    } else {
+        // No data - show empty canvas with title only
+        if (window.chartInstances['myChart1']) {
+            window.chartInstances['myChart1'].destroy();
+            delete window.chartInstances['myChart1'];
+        }
+        if (window.chartInstances['myChart2']) {
+            window.chartInstances['myChart2'].destroy();
+            delete window.chartInstances['myChart2'];
+        }
+        
+        // Clear canvas and show "No data" message
+        const ctx1 = document.getElementById('myChart1').getContext('2d');
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+        
+        ctx1.clearRect(0, 0, ctx1.canvas.width, ctx1.canvas.height);
+        ctx2.clearRect(0, 0, ctx2.canvas.width, ctx2.canvas.height);
+        
+        // Add "No data" text
+        ctx1.font = '16px Arial';
+        ctx1.fillStyle = '#666';
+        ctx1.textAlign = 'center';
+        ctx1.fillText('Số lượng bán ra', ctx1.canvas.width/2, ctx1.canvas.height/2 - 10);
+        ctx1.fillText('Không có dữ liệu', ctx1.canvas.width/2, ctx1.canvas.height/2 + 10);
+        
+        ctx2.font = '16px Arial';
+        ctx2.fillStyle = '#666';
+        ctx2.textAlign = 'center';
+        ctx2.fillText('Doanh thu', ctx2.canvas.width/2, ctx2.canvas.height/2 - 10);
+        ctx2.fillText('Không có dữ liệu', ctx2.canvas.width/2, ctx2.canvas.height/2 + 10);
+    }
 
     // var doughnutChart = copyObject(dataChart);
     //     doughnutChart.type = 'doughnut';
@@ -664,7 +703,7 @@ async function addTableDonHang() {
         s += `<tr>
             <td style="width: 5%">` + (i+1) + `</td>
             <td style="width: 13%">` + orderId + `</td>
-            <td style="width: 7%">` + customerName + `</td>
+            <td style="width: 7%">` + (d.fullname || d.username || d.user_id || 'N/A') + `</td>
             <td style="width: 20%">` + itemsDisplay + `</td>
             <td style="width: 15%">` + totalAmount + `</td>
             <td style="width: 10%">` + orderDate + `</td>
@@ -924,9 +963,10 @@ async function xoaNguoiDung(userId) {
                 return;
             }
             
-            // Reload tables
+            // Reload tables and charts
             await addTableKhachHang();
             await addTableDonHang();
+            await addThongKe(); // Reload charts
             
             alert('Xóa người dùng thành công!');
             
