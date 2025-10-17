@@ -9,13 +9,22 @@ const JWT_SECRET = 'your-secret-key';
 router.post('/register', (req, res) => {
   const { username, password, email, fullname, phone, address } = req.body;
   
+  // Validate required fields
+  if (!username || !password || !email || !fullname) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  
   db.run(
     `INSERT INTO users (username, password, email, fullname, phone, address) 
      VALUES (?, ?, ?, ?, ?, ?)`,
-    [username, password, email, fullname, phone, address],
+    [username, password, email, fullname, phone || null, address || null],
     function(err) {
       if (err) {
-        return res.status(400).json({ error: 'Username or email already exists' });
+        console.error('Registration error:', err);
+        if (err.code === 'SQLITE_CONSTRAINT') {
+          return res.status(400).json({ error: 'Username or email already exists' });
+        }
+        return res.status(500).json({ error: 'Registration failed' });
       }
       res.json({ message: 'User registered successfully', userId: this.lastID });
     }
@@ -64,11 +73,29 @@ router.get('/profile/:userId', (req, res) => {
 
 // Update profile
 router.put('/profile/:userId', (req, res) => {
-  const { email, fullname, phone, address } = req.body;
+  const updates = req.body;
+  const allowedFields = ['email', 'fullname', 'phone', 'address'];
+  
+  // Build dynamic query
+  const fields = [];
+  const values = [];
+  
+  for (const [key, value] of Object.entries(updates)) {
+    if (allowedFields.includes(key)) {
+      fields.push(`${key} = ?`);
+      values.push(value);
+    }
+  }
+  
+  if (fields.length === 0) {
+    return res.status(400).json({ error: 'No valid fields to update' });
+  }
+  
+  values.push(req.params.userId);
   
   db.run(
-    'UPDATE users SET email = ?, fullname = ?, phone = ?, address = ? WHERE id = ?',
-    [email, fullname, phone, address, req.params.userId],
+    `UPDATE users SET ${fields.join(', ')} WHERE id = ?`,
+    values,
     function(err) {
       if (err) {
         return res.status(400).json({ error: 'Update failed' });

@@ -164,6 +164,39 @@ app.delete('/api/cart/:userId', (req, res) => {
   res.json(carts[userId]);
 });
 
+// Admin product routes
+app.post('/api/admin/products', (req, res) => {
+  const newProduct = req.body;
+  // Add to products array (in production, save to database)
+  products.push(newProduct);
+  res.json({ message: 'Product added successfully', product: newProduct });
+});
+
+app.put('/api/admin/products/:masp', (req, res) => {
+  const { masp } = req.params;
+  const updatedProduct = req.body;
+  
+  const index = products.findIndex(p => p.masp === masp);
+  if (index !== -1) {
+    products[index] = updatedProduct;
+    res.json({ message: 'Product updated successfully' });
+  } else {
+    res.status(404).json({ error: 'Product not found' });
+  }
+});
+
+app.delete('/api/admin/products/:masp', (req, res) => {
+  const { masp } = req.params;
+  
+  const index = products.findIndex(p => p.masp === masp);
+  if (index !== -1) {
+    products.splice(index, 1);
+    res.json({ message: 'Product deleted successfully' });
+  } else {
+    res.status(404).json({ error: 'Product not found' });
+  }
+});
+
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);

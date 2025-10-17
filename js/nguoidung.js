@@ -18,6 +18,17 @@ window.onload = async function () {
     currentUser = getCurrentUser();
 
     if (currentUser) {
+        // Load user profile from API
+        try {
+            const userProfile = await AuthAPI.getProfile(currentUser.user.id);
+            if (!userProfile.error) {
+                // Merge API data with current user
+                currentUser.user = { ...currentUser.user, ...userProfile };
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+        }
+        
         await addTatCaDonHang(currentUser);
         addInfoUser(currentUser);
     } else {
@@ -39,7 +50,7 @@ function addInfoUser(user) {
         </tr>
         <tr>
             <td>Tài khoản: </td>
-            <td> <input type="text" value="` + user.username + `" readonly> </td>
+            <td> <input type="text" value="` + (user.user.username || user.username) + `" readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'username')"></i> </td>
         </tr>
         <tr>
@@ -74,19 +85,19 @@ function addInfoUser(user) {
             </td>
         </tr>
         <tr>
-            <td>Họ: </td>
-            <td> <input type="text" value="` + user.ho + `" readonly> </td>
-            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ho')"></i> </td>
-        </tr>
-        <tr>
-            <td>Tên: </td>
-            <td> <input type="text" value="` + user.ten + `" readonly> </td>
-            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ten')"></i> </td>
+            <td>Họ tên: </td>
+            <td> <input type="text" value="` + (user.user.fullname || user.fullname || '') + `" readonly> </td>
+            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'fullname')"></i> </td>
         </tr>
         <tr>
             <td>Email: </td>
-            <td> <input type="text" value="` + user.email + `" readonly> </td>
+            <td> <input type="text" value="` + (user.user.email || user.email || '') + `" readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'email')"></i> </td>
+        </tr>
+        <tr>
+            <td>Số điện thoại: </td>
+            <td> <input type="text" value="` + (user.user.phone || user.phone || '') + `" readonly> </td>
+            <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'phone')"></i> </td>
         </tr>
         <tr>
             <td colspan="3" style="padding:5px; border-top: 2px solid #ccc;"></td>
@@ -129,19 +140,28 @@ function changePass() {
         return;
     }
 
-    var temp = copyObject(currentUser);
-    currentUser.pass = inps[1].value;
-
-    // cập nhật danh sách sản phẩm trong localstorage
-    setCurrentUser(currentUser);
-    updateListUser(temp, currentUser);
-
-    // Cập nhật trên header
-    capNhat_ThongTin_CurrentUser();
-
-    // thông báo
-    addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
-    openChangePass();
+    // Update password via API
+    AuthAPI.updateProfile(currentUser.user.id, { password: inps[1].value })
+        .then(result => {
+            if (result.error) {
+                alert('Lỗi cập nhật mật khẩu!');
+                return;
+            }
+            
+            currentUser.pass = inps[1].value;
+            setCurrentUser(currentUser);
+            
+            // Cập nhật trên header
+            capNhat_ThongTin_CurrentUser();
+            
+            // thông báo
+            addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
+            openChangePass();
+        })
+        .catch(error => {
+            console.error('Error updating password:', error);
+            alert('Lỗi cập nhật mật khẩu!');
+        });
 }
 
 function changeInfo(iTag, info) {
@@ -150,44 +170,32 @@ function changeInfo(iTag, info) {
     // Đang hiện
     if (!inp.readOnly && inp.value != '') {
 
-        if (info == 'username') {
-            var users = getListUser();
-            for (var u of users) {
-                if (u.username == inp.value && u.username != currentUser.username) {
-                    alert('Tên đã có người sử dụng !!');
-                    inp.value = currentUser.username;
+        // Update user info directly via API
+        currentUser.user[info] = inp.value;
+        
+        // Update profile via API
+        const updateData = {};
+        updateData[info] = inp.value;
+        
+        AuthAPI.updateProfile(currentUser.user.id, updateData)
+            .then(result => {
+                if (result.error) {
+                    alert('Lỗi cập nhật thông tin!');
                     return;
                 }
-            }
-            // Đổi tên trong list đơn hàng
-            if (!currentUser.donhang.length) {
-                document.getElementsByClassName('listDonHang')[0].innerHTML = `
-                    <h3 style="width=100%; padding: 50px; color: green; font-size: 2em; text-align: center"> 
-                        Xin chào ` + inp.value + `. Bạn chưa có đơn hàng nào.
-                    </h3>`;
-            }
-
-
-        } else if (info == 'email') {
-            var users = getListUser();
-            for (var u of users) {
-                if (u.email == inp.value && u.username != currentUser.username) {
-                    alert('Email đã có người sử dụng !!');
-                    inp.value = currentUser.email;
-                    return;
-                }
-            }
-        }
-
-        var temp = copyObject(currentUser);
-        currentUser[info] = inp.value;
-
-        // cập nhật danh sách sản phẩm trong localstorage
-        setCurrentUser(currentUser);
-        updateListUser(temp, currentUser);
-
-        // Cập nhật trên header
-        capNhat_ThongTin_CurrentUser();
+                
+                // Update local session
+                setCurrentUser(currentUser);
+        
+                // Cập nhật trên header
+                capNhat_ThongTin_CurrentUser();
+                
+                addAlertBox('Cập nhật thông tin thành công!', '#5f5', '#000', 3000);
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                alert('Lỗi cập nhật thông tin!');
+            });
 
         iTag.innerHTML = '';
 

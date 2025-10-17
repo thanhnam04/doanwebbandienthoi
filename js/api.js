@@ -24,7 +24,15 @@ const AuthAPI = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             });
-            return await response.json();
+            
+            const result = await response.json();
+            
+            // If HTTP status is not OK, treat as error
+            if (!response.ok) {
+                return { error: result.error || 'Registration failed' };
+            }
+            
+            return result;
         } catch (error) {
             console.error('Register error:', error);
             return { error: 'Network error' };
