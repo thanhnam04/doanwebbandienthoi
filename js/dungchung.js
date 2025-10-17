@@ -138,29 +138,18 @@ function setCurrentUser(u) {
     window.localStorage.setItem('CurrentUser', JSON.stringify(u));
 }
 
-// Hàm get set cho danh sách người dùng
+// Legacy functions - kept for backward compatibility but not used with API
 function getListUser() {
-    var data = JSON.parse(window.localStorage.getItem('ListUser')) || []
-    var l = [];
-    for (var d of data) {
-        l.push(d);
-    }
-    return l;
+    return JSON.parse(window.localStorage.getItem('ListUser')) || [];
 }
 
 function setListUser(l) {
     window.localStorage.setItem('ListUser', JSON.stringify(l));
 }
 
-// Sau khi chỉnh sửa 1 user 'u' thì cần hàm này để cập nhật lại vào ListUser
 function updateListUser(u, newData) {
-    var list = getListUser();
-    for (var i = 0; i < list.length; i++) {
-        if (equalUser(u, list[i])) {
-            list[i] = (newData ? newData : u);
-        }
-    }
-    setListUser(list);
+    // This function is deprecated when using API
+    // Profile updates should go through AuthAPI.updateProfile
 }
 
 async function logIn(form) {
@@ -196,29 +185,44 @@ async function logIn(form) {
 }
 
 async function signUp(form) {
+    // Validate form data
+    if (!form.newUser.value.trim() || !form.newPass.value.trim() || 
+        !form.email.value.trim() || !form.ho.value.trim() || !form.ten.value.trim()) {
+        alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+        return false;
+    }
+
     var userData = {
-        username: form.newUser.value,
-        password: form.newPass.value,
-        email: form.email.value,
-        fullname: form.ho.value + ' ' + form.ten.value,
-        phone: '',
-        address: ''
+        username: form.newUser.value.trim(),
+        password: form.newPass.value.trim(),
+        email: form.email.value.trim(),
+        fullname: (form.ho.value.trim() + ' ' + form.ten.value.trim()).trim()
     };
 
     try {
         const result = await AuthAPI.register(userData);
+        console.log('Registration result:', result);
         
         if (result.error) {
-            alert('Tên đăng nhập đã có người sử dụng !!');
+            alert(result.error === 'Username or email already exists' ? 
+                  'Tên đăng nhập hoặc email đã có người sử dụng !!' : 
+                  'Đăng ký thất bại: ' + result.error);
             return false;
         }
 
-        alert('Đăng kí thành công! Bạn có thể đăng nhập ngay bây giờ.');
+        // Show success notification
+        addAlertBox('Đăng kí thành công! Bạn có thể đăng nhập ngay bây giờ.', '#17c671', '#fff', 4000);
         
-        // Switch to login tab
-        document.querySelector('.tab a[href="#login"]').click();
+        // Clear form
+        form.reset();
+        
+        // Switch to login tab after a short delay
+        setTimeout(() => {
+            document.querySelector('.tab a[href="#login"]').click();
+        }, 500);
         
     } catch (error) {
+        console.error('Registration error:', error);
         alert('Lỗi kết nối. Vui lòng thử lại!');
     }
     

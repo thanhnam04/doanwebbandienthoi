@@ -72,16 +72,19 @@ router.get('/stats', (req, res) => {
        COUNT(DISTINCT o.id) as total_orders,
        SUM(o.total_amount) as total_revenue,
        COUNT(DISTINCT o.user_id) as total_customers
-     FROM orders o`,
+     FROM orders o
+     WHERE o.status = 'Đã giao hàng'`,
     (err, stats) => {
       if (err) {
         return res.status(400).json({ error: 'Failed to get stats' });
       }
       
-      // Get company stats
+      // Get company stats - only from completed orders
       db.all(
         `SELECT oi.masp, SUM(oi.quantity) as sold_count, SUM(oi.quantity * oi.price) as revenue
          FROM order_items oi
+         JOIN orders o ON oi.order_id = o.id
+         WHERE o.status = 'Đã giao hàng'
          GROUP BY oi.masp`,
         (err, productStats) => {
           if (err) {

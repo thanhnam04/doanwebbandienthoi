@@ -140,19 +140,28 @@ function changePass() {
         return;
     }
 
-    var temp = copyObject(currentUser);
-    currentUser.pass = inps[1].value;
-
-    // cập nhật danh sách sản phẩm trong localstorage
-    setCurrentUser(currentUser);
-    updateListUser(temp, currentUser);
-
-    // Cập nhật trên header
-    capNhat_ThongTin_CurrentUser();
-
-    // thông báo
-    addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
-    openChangePass();
+    // Update password via API
+    AuthAPI.updateProfile(currentUser.user.id, { password: inps[1].value })
+        .then(result => {
+            if (result.error) {
+                alert('Lỗi cập nhật mật khẩu!');
+                return;
+            }
+            
+            currentUser.pass = inps[1].value;
+            setCurrentUser(currentUser);
+            
+            // Cập nhật trên header
+            capNhat_ThongTin_CurrentUser();
+            
+            // thông báo
+            addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
+            openChangePass();
+        })
+        .catch(error => {
+            console.error('Error updating password:', error);
+            alert('Lỗi cập nhật mật khẩu!');
+        });
 }
 
 function changeInfo(iTag, info) {
@@ -161,37 +170,8 @@ function changeInfo(iTag, info) {
     // Đang hiện
     if (!inp.readOnly && inp.value != '') {
 
-        if (info == 'username') {
-            var users = getListUser();
-            for (var u of users) {
-                if (u.username == inp.value && u.username != currentUser.username) {
-                    alert('Tên đã có người sử dụng !!');
-                    inp.value = currentUser.username;
-                    return;
-                }
-            }
-            // Đổi tên trong list đơn hàng
-            if (!currentUser.donhang.length) {
-                document.getElementsByClassName('listDonHang')[0].innerHTML = `
-                    <h3 style="width=100%; padding: 50px; color: green; font-size: 2em; text-align: center"> 
-                        Xin chào ` + inp.value + `. Bạn chưa có đơn hàng nào.
-                    </h3>`;
-            }
-
-
-        } else if (info == 'email') {
-            var users = getListUser();
-            for (var u of users) {
-                if (u.email == inp.value && u.username != currentUser.username) {
-                    alert('Email đã có người sử dụng !!');
-                    inp.value = currentUser.email;
-                    return;
-                }
-            }
-        }
-
-        var temp = copyObject(currentUser);
-        currentUser[info] = inp.value;
+        // Update user info directly via API
+        currentUser.user[info] = inp.value;
         
         // Update profile via API
         const updateData = {};
@@ -204,9 +184,8 @@ function changeInfo(iTag, info) {
                     return;
                 }
                 
-                // cập nhật danh sách sản phẩm trong localstorage
+                // Update local session
                 setCurrentUser(currentUser);
-                updateListUser(temp, currentUser);
         
                 // Cập nhật trên header
                 capNhat_ThongTin_CurrentUser();

@@ -9,13 +9,22 @@ const JWT_SECRET = 'your-secret-key';
 router.post('/register', (req, res) => {
   const { username, password, email, fullname, phone, address } = req.body;
   
+  // Validate required fields
+  if (!username || !password || !email || !fullname) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  
   db.run(
     `INSERT INTO users (username, password, email, fullname, phone, address) 
      VALUES (?, ?, ?, ?, ?, ?)`,
-    [username, password, email, fullname, phone, address],
+    [username, password, email, fullname, phone || null, address || null],
     function(err) {
       if (err) {
-        return res.status(400).json({ error: 'Username or email already exists' });
+        console.error('Registration error:', err);
+        if (err.code === 'SQLITE_CONSTRAINT') {
+          return res.status(400).json({ error: 'Username or email already exists' });
+        }
+        return res.status(500).json({ error: 'Registration failed' });
       }
       res.json({ message: 'User registered successfully', userId: this.lastID });
     }
