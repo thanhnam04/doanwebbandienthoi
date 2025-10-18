@@ -322,7 +322,5 @@ var list_products = [
             "battery": "5150 mAh, có sạc nhanh có dây 66W, sạc không dây 50W"
         },
         "masp": "App0",
-
-
     }
 ];
