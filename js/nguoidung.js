@@ -122,17 +122,28 @@ function openChangePass() {
     else khungChangePass.classList.add('active');
 }
 
-function changePass() {
+async function changePass() {
     var khungChangePass = document.getElementById('khungDoiMatKhau');
     var inps = khungChangePass.getElementsByTagName('input');
-    if (inps[0].value != currentUser.pass) {
+    
+    // Validate old password by trying to login with it
+    try {
+        const loginResult = await AuthAPI.login(currentUser.user.username, inps[0].value);
+        if (loginResult.error) {
+            alert('Sai mật khẩu !!');
+            inps[0].focus();
+            return;
+        }
+    } catch (error) {
         alert('Sai mật khẩu !!');
         inps[0].focus();
         return;
     }
-    if (inps[1] == '') {
+    
+    if (inps[1].value == '') {
         inps[1].focus();
         alert('Chưa nhập mật khẩu mới !');
+        return;
     }
     if (inps[1].value != inps[2].value) {
         alert('Mật khẩu không khớp');
@@ -141,27 +152,26 @@ function changePass() {
     }
 
     // Update password via API
-    AuthAPI.updateProfile(currentUser.user.id, { password: inps[1].value })
-        .then(result => {
-            if (result.error) {
-                alert('Lỗi cập nhật mật khẩu!');
-                return;
-            }
-            
-            currentUser.pass = inps[1].value;
-            setCurrentUser(currentUser);
-            
-            // Cập nhật trên header
-            capNhat_ThongTin_CurrentUser();
-            
-            // thông báo
-            addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
-            openChangePass();
-        })
-        .catch(error => {
-            console.error('Error updating password:', error);
+    try {
+        const result = await AuthAPI.updateProfile(currentUser.user.id, { password: inps[1].value });
+        if (result.error) {
             alert('Lỗi cập nhật mật khẩu!');
-        });
+            return;
+        }
+        
+        // Clear form
+        inps[0].value = '';
+        inps[1].value = '';
+        inps[2].value = '';
+        
+        // thông báo
+        addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
+        openChangePass();
+        
+    } catch (error) {
+        console.error('Error updating password:', error);
+        alert('Lỗi cập nhật mật khẩu!');
+    }
 }
 
 function changeInfo(iTag, info) {
@@ -219,6 +229,10 @@ async function addTatCaDonHang(user) {
             </h3>`;
         return;
     }
+    
+    // Reset counters
+    tongTienTatCaDonHang = 0;
+    tongSanPhamTatCaDonHang = 0;
     
     // Get orders from API
     const orders = await OrdersAPI.getUserOrders(user.user.id);
@@ -283,7 +297,8 @@ function addDonHang(order) {
                         <td style="text-align: center">` + order.status + `</td>
                     </tr>
                 `;
-            tongSanPhamTatCaDonHang += quantity;
+            // Chỉ tính số lượng sản phẩm (không tính số lượng từng item)
+            tongSanPhamTatCaDonHang += 1; // Mỗi loại sản phẩm tính là 1
         }
     }
     

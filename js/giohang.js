@@ -119,7 +119,10 @@ async function xoaSanPhamTrongGioHang(masp) {
 }
 
 async function thanhToan() {
+	console.log('🔵 [B.2] Starting checkout...', cartItems);
+	
 	if (!cartItems.length) {
+		console.log('❌ [B.2] Cart is empty');
 		addAlertBox('Không có mặt hàng nào cần thanh toán !!', '#ffb400', '#fff', 2000);
 		return;
 	}

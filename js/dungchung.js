@@ -152,12 +152,20 @@ function updateListUser(u, newData) {
     // Profile updates should go through AuthAPI.updateProfile
 }
 
-async function logIn(form) {
+async function logIn(form, event) {
+    console.log('🔵 [B.1] Starting login...');
+    
+    // Prevent form submission
+    if (event) event.preventDefault();
+    
     var username = form.username.value;
     var password = form.pass.value;
+    
+    console.log('📤 [B.1] Login attempt:', { username, password: '***' });
 
     try {
         const result = await AuthAPI.login(username, password);
+        console.log('📥 [B.1] Login result:', result);
         
         if (result.error) {
             alert('Nhập sai tên hoặc mật khẩu !!!');
@@ -184,10 +192,16 @@ async function logIn(form) {
     return false;
 }
 
-async function signUp(form) {
+async function signUp(form, event) {
+    console.log('🔵 [B.1] Starting registration...');
+    
+    // Prevent form submission
+    if (event) event.preventDefault();
+    
     // Validate form data
     if (!form.newUser.value.trim() || !form.newPass.value.trim() || 
         !form.email.value.trim() || !form.ho.value.trim() || !form.ten.value.trim()) {
+        console.log('❌ [B.1] Validation failed: Missing required fields');
         alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
         return false;
     }
@@ -198,27 +212,43 @@ async function signUp(form) {
         email: form.email.value.trim(),
         fullname: (form.ho.value.trim() + ' ' + form.ten.value.trim()).trim()
     };
+    
+    console.log('📤 [B.1] Sending registration data:', userData);
 
     try {
         const result = await AuthAPI.register(userData);
-        console.log('Registration result:', result);
+        console.log('📥 [B.1] Registration result:', result);
         
         if (result.error) {
+            console.log('❌ [B.1] Registration failed:', result.error);
             alert(result.error === 'Username or email already exists' ? 
                   'Tên đăng nhập hoặc email đã có người sử dụng !!' : 
                   'Đăng ký thất bại: ' + result.error);
             return false;
         }
 
+        console.log('✅ [B.1] Registration successful!');
+        
         // Show success notification
-        addAlertBox('Đăng kí thành công! Bạn có thể đăng nhập ngay bây giờ.', '#17c671', '#fff', 4000);
+        addAlertBox('Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.', '#17c671', '#fff', 5000);
         
         // Clear form
         form.reset();
         
-        // Switch to login tab after a short delay
+        // Switch to login tab
         setTimeout(() => {
-            document.querySelector('.tab a[href="#login"]').click();
+            const loginTab = document.querySelector('.tab a[href="#login"]');
+            if (loginTab) {
+                loginTab.click();
+                
+                // Focus on username field in login form after tab switch
+                setTimeout(() => {
+                    const usernameField = document.querySelector('#login input[name="username"]');
+                    if (usernameField) {
+                        usernameField.focus();
+                    }
+                }, 200);
+            }
         }, 500);
         
     } catch (error) {
@@ -484,6 +514,11 @@ function addTags(nameTag, link) {
 
 // Thêm sản phẩm vào trang
 function addProduct(p, ele, returnString) {
+	if (!p || !p.img) {
+		console.warn('Product missing img:', p);
+		return '';
+	}
+	
 	promo = new Promo(p.promo.name, p.promo.value); // class Promo
 	product = new Product(p.masp, p.name, p.img, p.price, p.star, p.rateCount, promo); // Class product
 
@@ -606,7 +641,7 @@ function addContainTaiKhoan() {
                 <div id="login">
                     <h1>Chào mừng bạn trở lại!</h1>
 
-                    <form onsubmit="return logIn(this);">
+                    <form onsubmit="return logIn(this, event);">
 
                         <div class="field-wrap">
                             <label>
@@ -633,7 +668,7 @@ function addContainTaiKhoan() {
                 <div id="signup">
                     <h1>Đăng kí miễn phí</h1>
 
-                    <form onsubmit="return signUp(this);">
+                    <form onsubmit="return signUp(this, event);">
 
                         <div class="top-row">
                             <div class="field-wrap">

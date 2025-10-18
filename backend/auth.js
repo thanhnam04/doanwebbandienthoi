@@ -11,8 +11,11 @@ router.post('/register', (req, res) => {
   
   // Validate required fields
   if (!username || !password || !email || !fullname) {
+    console.log('Missing fields:', { username: !!username, password: !!password, email: !!email, fullname: !!fullname });
     return res.status(400).json({ error: 'Missing required fields' });
   }
+  
+  console.log('Registration data received:', { username, email, fullname });
   
   db.run(
     `INSERT INTO users (username, password, email, fullname, phone, address) 
@@ -74,7 +77,7 @@ router.get('/profile/:userId', (req, res) => {
 // Update profile
 router.put('/profile/:userId', (req, res) => {
   const updates = req.body;
-  const allowedFields = ['email', 'fullname', 'phone', 'address'];
+  const allowedFields = ['email', 'fullname', 'phone', 'address', 'password'];
   
   // Build dynamic query
   const fields = [];

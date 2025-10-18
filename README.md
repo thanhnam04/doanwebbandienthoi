@@ -21,7 +21,7 @@ Chức năng **ADMIN**:
 - Danh sách **khách hàng**, tìm kiếm/lọc, thêm/xoá/khoá khác hàng
 
 ## Admin Account: 
-+ username: admin
++ username: admini
 + password: adadad
 
 ## Screenshots

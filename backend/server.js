@@ -8,6 +8,7 @@ const authRoutes = require('./auth');
 const orderRoutes = require('./orders');
 const adminRoutes = require('./admin');
 const db = require('./database');
+const { errorHandler, successResponse, errorResponse } = require('./middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,50 +31,58 @@ module.exports.carts = carts;
 
 // Get all products with optional search and filters
 app.get('/api/products', (req, res) => {
-  let result = [...products];
-  
-  // Search by name or company
-  if (req.query.search) {
-    const query = req.query.search.toLowerCase();
-    result = result.filter(p =>
-      p.name.toLowerCase().includes(query) ||
-      p.company.toLowerCase().includes(query)
-    );
+  try {
+    let result = [...products];
+    
+    // Search by name or company
+    if (req.query.search) {
+      const query = req.query.search.toLowerCase();
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.company.toLowerCase().includes(query)
+      );
+    }
+    
+    // Filter by company
+    if (req.query.company) {
+      result = result.filter(p =>
+        p.company.toLowerCase() === req.query.company.toLowerCase()
+      );
+    }
+    
+    // Filter by price range
+    if (req.query.minPrice || req.query.maxPrice) {
+      const minPrice = parseInt(req.query.minPrice) || 0;
+      const maxPrice = parseInt(req.query.maxPrice) || Infinity;
+      result = result.filter(p => {
+        const price = parseInt(p.price.replace(/\./g, ''));
+        return price >= minPrice && price <= maxPrice;
+      });
+    }
+    
+    // Filter by star rating
+    if (req.query.star) {
+      const minStar = parseInt(req.query.star);
+      result = result.filter(p => p.star >= minStar);
+    }
+    
+    successResponse(res, result, `Found ${result.length} products`);
+  } catch (error) {
+    errorResponse(res, 'Failed to fetch products', 500);
   }
-  
-  // Filter by company
-  if (req.query.company) {
-    result = result.filter(p =>
-      p.company.toLowerCase() === req.query.company.toLowerCase()
-    );
-  }
-  
-  // Filter by price range
-  if (req.query.minPrice || req.query.maxPrice) {
-    const minPrice = parseInt(req.query.minPrice) || 0;
-    const maxPrice = parseInt(req.query.maxPrice) || Infinity;
-    result = result.filter(p => {
-      const price = parseInt(p.price.replace(/\./g, ''));
-      return price >= minPrice && price <= maxPrice;
-    });
-  }
-  
-  // Filter by star rating
-  if (req.query.star) {
-    const minStar = parseInt(req.query.star);
-    result = result.filter(p => p.star >= minStar);
-  }
-  
-  res.json(result);
 });
 
 // Get product by masp
 app.get('/api/products/:masp', (req, res) => {
-  const product = products.find(p => p.masp === req.params.masp);
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404).json({ error: 'Product not found' });
+  try {
+    const product = products.find(p => p.masp === req.params.masp);
+    if (product) {
+      successResponse(res, product, 'Product found');
+    } else {
+      errorResponse(res, 'Product not found', 404);
+    }
+  } catch (error) {
+    errorResponse(res, 'Failed to fetch product', 500);
   }
 });
 
@@ -204,6 +213,9 @@ app.delete('/api/admin/products/:masp', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname, '..')));

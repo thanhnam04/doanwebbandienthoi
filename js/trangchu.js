@@ -1,31 +1,10 @@
-// Search function using API
-async function searchProducts(form) {
+// Search function - redirect to search URL
+function searchProducts(form) {
 	var searchTerm = form.search.value.trim();
 	if (!searchTerm) return false;
 	
-	try {
-		// Call API to search products
-		const results = await ProductsAPI.search(searchTerm);
-		
-		// Clear current products
-		clearAllProducts();
-		
-		// Show products container
-		document.getElementsByClassName('contain-products')[0].style.display = '';
-		
-		if (results.length > 0) {
-			// Add search results
-			addProductsFrom(results);
-			alertNotHaveProduct(true);
-		} else {
-			// No products found
-			alertNotHaveProduct(false);
-		}
-		
-	} catch (error) {
-		console.error('Search error:', error);
-		alert('Lỗi tìm kiếm!');
-	}
+	// Redirect to search URL
+	window.location.href = 'index.html?search=' + encodeURIComponent(searchTerm);
 	
 	return false; // Prevent form submission
 }
@@ -33,9 +12,30 @@ async function searchProducts(form) {
 window.onload = async function () {
 	khoiTao();
 	
-	// Load products from API
+	// Load products from API with fallback
 	if (typeof ProductsAPI !== 'undefined') {
-		window.list_products = await ProductsAPI.getAll();
+		try {
+			window.list_products = await ProductsAPI.getAll();
+			if (!list_products || list_products.length === 0) {
+				// Fallback to local data if API fails
+				console.warn('API returned no products, using local data');
+				window.list_products = typeof list_products !== 'undefined' ? list_products : [];
+			}
+		} catch (error) {
+			console.error('Failed to load products from API:', error);
+			// Show user-friendly error message
+			alert('⚠️ Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại sau.');
+			// Also try addAlertBox if available
+			setTimeout(() => {
+				try {
+					addAlertBox('Không thể tải dữ liệu sản phẩm. Vui lòng kiểm tra kết nối mạng.', '#ff6b6b', '#fff', 8000);
+				} catch (e) {
+					console.log('Alert box not available');
+				}
+			}, 1000);
+			// Use local fallback data
+			window.list_products = typeof list_products !== 'undefined' ? list_products : [];
+		}
 	}
 
 	// Thêm hình vào banner
@@ -387,11 +387,29 @@ function timKiemTheoGiaTien(list, giaMin, giaMax, soluong) {
 	else count = list.length;
 
 	for (var i = 0; i < list.length; i++) {
-		var gia = parseInt(list[i].price.split('.').join(''));
-		if (gia >= giaMin && gia <= giaMax) {
-			result.push(list[i]);
-			count--;
-			if (count <= 0) break;
+		// Tính giá thực tế (sau khuyến mãi)
+		var giaGoc = stringToNum(list[i].price);
+		var gia = giaGoc;
+		
+		// Nếu có khuyến mãi giá rẻ online thì dùng giá KM
+		if (list[i].promo && list[i].promo.name == 'giareonline') {
+			gia = stringToNum(list[i].promo.value);
+		}
+		
+		// Xử lý trường hợp "trên X triệu" (giaMax = 0)
+		if (giaMax == 0) {
+			if (gia >= giaMin) {
+				result.push(list[i]);
+				count--;
+				if (count <= 0) break;
+			}
+		} else {
+			// Trường hợp bình thường: trong khoảng giaMin - giaMax
+			if (gia >= giaMin && gia <= giaMax) {
+				result.push(list[i]);
+				count--;
+				if (count <= 0) break;
+			}
 		}
 	}
 

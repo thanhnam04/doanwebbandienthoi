@@ -69,20 +69,39 @@ const ProductsAPI = {
     async getAll() {
         try {
             const response = await fetch(`${API_BASE_URL}/products`);
-            return await response.json();
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.message || 'API returned error');
+            }
+            
+            // Return data from new response format
+            return result.data || [];
         } catch (error) {
             console.error('Get products error:', error);
-            return [];
+            // Re-throw error để trangchu.js có thể catch
+            throw error;
         }
     },
 
     async getById(masp) {
         try {
             const response = await fetch(`${API_BASE_URL}/products/${masp}`);
-            return await response.json();
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Product not found');
+            }
+            
+            return result.success ? result.data : null;
         } catch (error) {
             console.error('Get product error:', error);
-            return { error: 'Product not found' };
+            return null;
         }
     },
 
