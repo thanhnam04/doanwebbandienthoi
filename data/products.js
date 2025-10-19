@@ -1867,6 +1867,30 @@ var list_products = [{
   },
   "masp": "nubia1"
 },
+{
+  "name": "iPhone 17 Pro Max 512GB Silver",
+  "company": "Apple",
+  "img": "https://cdn2.cellphones.com.vn/insecure/rs:fill:300:300/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-17-pro-max_3.jpg",
+  "price": "49.990.000",
+  "star": 5,
+  "rateCount": 124,
+  "promo": {
+    "name": "giareonline",
+    "value": "10.000.000"
+  },
+  "detail": {
+    "screen": "OLED XDR, 6.9', ProMotion 120Hz",
+    "os": "iOS 19",
+    "camara": "3 camera chính 48 MP (wide) + 48 MP (ultrawide) + 48 MP (telephoto) + LiDAR",
+    "camaraFront": "12 MP",
+    "cpu": "Apple A19 Bionic 8 nhân",
+    "ram": "12 GB",
+    "rom": "512 GB",
+    "microUSB": "Không",
+    "battery": "4500 mAh, hỗ trợ sạc nhanh và sạc không dây MagSafe"
+  },
+  "masp": "App39"
+}
 // {
 //   "name": "Nubia Neo 3 4G 8GB/128GB",
 //   "company": "Nubia",
