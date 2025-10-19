@@ -2,12 +2,7 @@ var TONGTIEN = 0;
 
 window.onload = async function () {
     // Load products from API
-    if (typeof ProductsAPI !== 'undefined') {
-        window.list_products = await ProductsAPI.getAll();
-    } else {
-        // Fallback to localStorage
-        list_products = getListProducts() || list_products;
-    }
+    window.list_products = await ProductsAPI.getAll();
     adminInfo = getListAdmin() || adminInfo;
 
     addEventChangeTab();
@@ -150,7 +145,7 @@ async function addThongKe() {
         ));
 
         addChart('myChart2', createChartConfig(
-            'Doanh thu',
+            'Doanh thu (VNĐ)',
             'doughnut', 
             Object.keys(thongKeHang), 
             Object.values(thongKeHang).map(_ =>  _.doanhThu),
@@ -669,7 +664,8 @@ async function addTableDonHang() {
         listDH = await AdminAPI.getOrders();
     } catch (error) {
         console.error('Error loading orders:', error);
-        listDH = getListDonHang(); // Fallback to localStorage
+        alert('Không thể tải danh sách đơn hàng. Vui lòng kiểm tra kết nối!');
+        return;
     }
 
     TONGTIEN = 0;
@@ -879,7 +875,8 @@ async function addTableKhachHang() {
         listUser = await AdminAPI.getUsers();
     } catch (error) {
         console.error('Error loading users:', error);
-        listUser = getListUser(); // Fallback to localStorage
+        alert('Không thể tải danh sách khách hàng. Vui lòng kiểm tra kết nối!');
+        return;
     }
 
     for (var i = 0; i < listUser.length; i++) {

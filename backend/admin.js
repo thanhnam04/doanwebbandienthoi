@@ -127,7 +127,14 @@ router.get('/stats', (req, res) => {
                 companyStats[company] = { sold_count: 0, revenue: 0 };
               }
               companyStats[company].sold_count += stat.sold_count;
-              companyStats[company].revenue += stat.revenue;
+              
+              // Sử dụng giá từ products.js thay vì từ database
+              const productPrice = parseInt(product.price.replace(/\./g, ''));
+              const revenue = stat.sold_count * productPrice;
+              
+              console.log(`Product: ${product.name}, Price: ${product.price} -> ${productPrice}, Sold: ${stat.sold_count}, Revenue: ${revenue}`);
+              
+              companyStats[company].revenue += revenue;
             }
           });
           

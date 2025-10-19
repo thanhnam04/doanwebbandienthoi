@@ -6,8 +6,16 @@ window.onload = async function () {
     khoiTao();
 
     // Load products from API
-    if (typeof ProductsAPI !== 'undefined') {
+    try {
         window.list_products = await ProductsAPI.getAll();
+        if (!list_products || list_products.length === 0) {
+            alert('Không có sản phẩm nào được tải. Vui lòng kiểm tra kết nối!');
+            return;
+        }
+    } catch (error) {
+        console.error('Failed to load products from API:', error);
+        alert('⚠️ Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại sau.');
+        return;
     }
 
     // thêm tags (từ khóa) vào khung tìm kiếm

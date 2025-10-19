@@ -14,8 +14,7 @@ function setListAdmin(l) {
 
 // Hàm khởi tạo, tất cả các trang đều cần
 function khoiTao() {
-    // get data từ localstorage
-    list_products = getListProducts() || list_products;
+    // Chỉ sử dụng API, không fallback localStorage
     adminInfo = getListAdmin() || adminInfo;
 
     setupEventTaiKhoan();
@@ -385,7 +384,8 @@ function numToString(num, char) {
 
 function stringToNum(str, char) {
     if (!str || typeof str !== 'string') return 0;
-    return Number(str.split(char || '.').join(''));
+    // Xử lý giá tiền VNĐ: "170.000" -> 170000
+    return Number(str.replace(/\./g, '').replace(/[^0-9]/g, ''));
 }
 
 // https://www.w3schools.com/howto/howto_js_autocomplete.asp
