@@ -1866,7 +1866,29 @@ var list_products = [{
     "battery": "6000 mAh"
   },
   "masp": "nubia1"
-}
+},
+// {
+//   "name": "Nubia Neo 3 4G 8GB/128GB",
+//   "company": "Nubia",
+//   "img": "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/d/i/dien-thoai-nubia-neo-3-4g_2__1.png",
+//   "price": "≈ 3.549.000",           // tham khảo giá tại Việt Nam: khoảng 3.549.000₫ (nguồn bán lẻ)  
+//   "star": 4,
+//   "rateCount": null,
+//   "promo": null,
+//   "detail": {
+//     "screen": "AMOLED (?) 6.8', 120 Hz, Full HD+",
+//     "os": "Android (ước tính Android 15 hoặc tùy theo thị trường)", 
+//     "camara": "50 MP + 2 MP (dual camera)",        // theo tin rò rỉ/specs :contentReference[oaicite:1]{index=1}
+//     "camaraFront": "16 MP",                        // theo điện thoại Neo 3 phân tích tại PH :contentReference[oaicite:2]{index=2}
+//     "cpu": "Unisoc T8300 (6 nm) hoặc tương đương",  // theo blog specs :contentReference[oaicite:3]{index=3}
+//     "ram": "8 GB",
+//     "rom": "128 GB",
+//     "microUSB": "Không (USB-C)",
+//     "battery": "≈ 5200-6000 mAh"                    // một nguồn ghi 5200mAh cho bản 4G :contentReference[oaicite:4]{index=4}
+//   },
+//   "masp": "nubia2"
+// }
+
 ]
 
 // Export for Node.js (backend)

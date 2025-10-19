@@ -29,13 +29,13 @@ Chức năng **ADMIN**:
 ### Cơ bản
 
 Trang chủ
-![Trang chủ](./screenshots/Screenshot_1.png)
+![Trang chủ](./screenshots/Screenshot_1a.png)
 
 Sản phẩm trong trang chủ
-![Trang chủ](./screenshots/Screenshot_2.png)
+![Trang chủ](./screenshots/Screenshot_2a.png)
 
 Chi tiết sản phẩm
-![Trang chủ](./screenshots/Screenshot_3.png)
+![Trang chủ](./screenshots/Screenshot_3a.png)
 
 Đăng nhập
 ![Trang chủ](./screenshots/Screenshot_4.png)
@@ -44,24 +44,24 @@ Chi tiết sản phẩm
 ![Trang chủ](./screenshots/Screenshot_5.png)
 
 Trang người dùng
-![Trang chủ](./screenshots/Screenshot_6.png)
+![Trang chủ](./screenshots/Screenshot_6a.png)
 
 Giỏ hàng
-![Trang chủ](./screenshots/Screenshot_7.png)
+![Trang chủ](./screenshots/Screenshot_7a.png)
 
 Tìm kiếm/lọc/sắp xếp sản phẩm
-![Trang chủ](./screenshots/Screenshot_8.png)
+![Trang chủ](./screenshots/Screenshot_8a.png)
 
 ### Admin
 
 Admin: Thống kê
-![Trang chủ](./screenshots/Screenshot_9.png)
+![Trang chủ](./screenshots/Screenshot_9a.png)
 
 Admin: Sản phẩm
-![Trang chủ](./screenshots/Screenshot_10.png)
+![Trang chủ](./screenshots/Screenshot_10a.png)
 
 Admin: Đơn hàng
-![Trang chủ](./screenshots/Screenshot_11.png)
+![Trang chủ](./screenshots/Screenshot_11a.png)
 
 Admin: Người dùng
-![Trang chủ](./screenshots/Screenshot_12.png)
+![Trang chủ](./screenshots/Screenshot_12a.png)
