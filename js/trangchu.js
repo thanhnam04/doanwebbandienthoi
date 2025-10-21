@@ -55,7 +55,7 @@ for (var i = 1; i <= numBanner; i++) {
 	for (var t of tags) addTags(t, "index.html?search=" + t);
 
 	// Thêm danh sách hãng điện thoại
-	var company = ["Apple.jpg", "Samsung.jpg","honor.jpg", "nubia.jpg", "Huawei.jpg", "Xiaomi.png",
+	var company = ["Apple.jpg", "Samsung.jpg", "nubia.jpg", "Huawei.jpg", "Xiaomi.png",
 		"Realme.png", "Vivo.jpg", "Philips.jpg", "Mobell.jpg", "Mobiistar.jpg", "Itel.jpg",
 		 "HTC.jpg","Oppo.jpg", "Nokia.jpg"
 	];
