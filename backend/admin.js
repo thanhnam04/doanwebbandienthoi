@@ -3,23 +3,43 @@ const db = require('./database');
 const products = require('../data/products.js');
 const router = express.Router();
 
-// Get all orders (admin)
+// Get all orders (admin) with optional date filtering
 router.get('/orders', (req, res) => {
-  db.all(
-    `SELECT o.*, u.fullname, u.phone,
+  const { from, to } = req.query;
+  
+  let query = `SELECT o.*, u.fullname, u.phone,
             GROUP_CONCAT(oi.masp || ':' || oi.quantity || ':' || oi.price) as items
      FROM orders o 
      JOIN users u ON o.user_id = u.id
-     LEFT JOIN order_items oi ON o.id = oi.order_id 
-     GROUP BY o.id 
-     ORDER BY o.created_at DESC`,
-    (err, orders) => {
-      if (err) {
-        return res.status(400).json({ error: 'Failed to get orders' });
-      }
-      res.json(orders);
+     LEFT JOIN order_items oi ON o.id = oi.order_id`;
+  
+  let params = [];
+  
+  if (from || to) {
+    query += ' WHERE ';
+    const conditions = [];
+    
+    if (from) {
+      conditions.push('DATE(o.created_at) >= ?');
+      params.push(from);
     }
-  );
+    
+    if (to) {
+      conditions.push('DATE(o.created_at) <= ?');
+      params.push(to);
+    }
+    
+    query += conditions.join(' AND ');
+  }
+  
+  query += ' GROUP BY o.id ORDER BY o.created_at DESC';
+  
+  db.all(query, params, (err, orders) => {
+    if (err) {
+      return res.status(400).json({ error: 'Failed to get orders' });
+    }
+    res.json(orders);
+  });
 });
 
 // Update order status
@@ -93,7 +113,7 @@ router.get('/stats', (req, res) => {
        SUM(o.total_amount) as total_revenue,
        COUNT(DISTINCT o.user_id) as total_customers
      FROM orders o
-     WHERE o.status = 'Đã giao hàng'`,
+     WHERE o.status = 'delivered'`,
     (err, stats) => {
       if (err) {
         console.error('Stats query error:', err);
@@ -107,7 +127,7 @@ router.get('/stats', (req, res) => {
         `SELECT oi.masp, SUM(oi.quantity) as sold_count, SUM(oi.quantity * oi.price) as revenue
          FROM order_items oi
          JOIN orders o ON oi.order_id = o.id
-         WHERE o.status = 'Đã giao hàng'
+         WHERE o.status = 'delivered'
          GROUP BY oi.masp`,
         (err, productStats) => {
           if (err) {

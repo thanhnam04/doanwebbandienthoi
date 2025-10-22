@@ -260,6 +260,18 @@ async function addTatCaDonHang(user) {
     }
 }
 
+// Map order status to Vietnamese for user display
+function mapOrderStatusForUser(status) {
+    const statusMap = {
+        'pending': 'Chờ xử lý',
+        'approved': 'Đã duyệt - Chờ giao hàng', 
+        'shipping': 'Đang giao hàng',
+        'delivered': 'Đã giao hàng',
+        'cancelled': 'Đã hủy'
+    };
+    return statusMap[status] || status;
+}
+
 function addDonHang(order) {
     var div = document.getElementsByClassName('listDonHang')[0];
 
@@ -306,7 +318,7 @@ function addDonHang(order) {
                         <td class="alignRight">` + numToString(actualPrice) + ` ₫</td>
                         <td class="soluong">` + quantity + `</td>
                         <td class="alignRight">` + numToString(thanhtien) + ` ₫</td>
-                        <td style="text-align: center">` + order.status + `</td>
+                        <td style="text-align: center">` + mapOrderStatusForUser(order.status) + `</td>
                     </tr>
                 `;
             // Tính tổng số lượng thực tế (bao gồm quantity của từng item)
@@ -320,7 +332,7 @@ function addDonHang(order) {
                 <tr style="font-weight:bold; text-align:center; height: 4em;">
                     <td colspan="4">TỔNG TIỀN: </td>
                     <td class="alignRight">` + numToString(order.total_amount) + ` ₫</td>
-                    <td>` + order.status + `</td>
+                    <td>` + mapOrderStatusForUser(order.status) + `</td>
                 </tr>
             </table>
             <hr>
