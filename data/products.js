@@ -5,6 +5,7 @@ var list_products = [{
     "price": "3.490.000",
     "star": 3,
     "rateCount": 26,
+    "stock": 25,
     "promo": {
         "name": "tragop",
         "value": "0"

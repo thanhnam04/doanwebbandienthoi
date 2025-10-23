@@ -7,11 +7,14 @@ const path = require('path');
 const authRoutes = require('./auth');
 const orderRoutes = require('./orders');
 const adminRoutes = require('./admin');
+const inventoryRoutes = require('./inventory');
+const invoiceRoutes = require('./invoice');
+const resetRoutes = require('./reset');
 const db = require('./database');
 const { errorHandler, successResponse, errorResponse } = require('./middleware');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -213,6 +216,9 @@ app.delete('/api/admin/products/:masp', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/invoice', invoiceRoutes);
+app.use('/api/reset', resetRoutes);
 
 // Error handling middleware (must be last)
 app.use(errorHandler);

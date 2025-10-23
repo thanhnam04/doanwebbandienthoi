@@ -677,7 +677,7 @@ async function addTableDonHang() {
         var customerName = d.fullname || d.khach || 'N/A';
         var orderDate = d.created_at ? new Date(d.created_at).toLocaleString() : (d.ngaygio || 'N/A');
         var totalAmount = d.total_amount ? numToString(d.total_amount) + ' ₫' : (d.tongtien || '0 ₫');
-        var status = d.status || d.tinhTrang || 'pending';
+        var status = mapOrderStatus(d.status || d.tinhTrang || 'pending');
         
         // Format items display
         var itemsDisplay = '';
@@ -705,15 +705,26 @@ async function addTableDonHang() {
             <td style="width: 10%">` + orderDate + `</td>
             <td style="width: 10%">` + status + `</td>
             <td style="width: 10%">
+                ${(status !== 'Đã hủy' && status !== 'cancelled') ? `
+                <div class="tooltip">
+                    <i class="fa fa-print" onclick="printInvoice('`+orderId+`')"></i>
+                    <span class="tooltiptext">In hóa đơn</span>
+                </div>` : ''}
+                ${(status === 'Chờ xử lý') ? `
                 <div class="tooltip">
                     <i class="fa fa-check" onclick="duyet('`+orderId+`', true)"></i>
                     <span class="tooltiptext">Duyệt</span>
-                </div>
+                </div>` : ''}
+                ${(status === 'Đã duyệt - Chờ giao hàng') ? `
+                <div class="tooltip">
+                    <i class="fa fa-truck" onclick="giaoHang('`+orderId+`')"></i>
+                    <span class="tooltiptext">Giao hàng</span>
+                </div>` : ''}
+                ${(status !== 'Đã giao hàng' && status !== 'Đã hủy') ? `
                 <div class="tooltip">
                     <i class="fa fa-remove" onclick="duyet('`+orderId+`', false)"></i>
                     <span class="tooltiptext">Hủy</span>
-                </div>
-                
+                </div>` : ''}
             </td>
         </tr>`;
         
@@ -776,10 +787,68 @@ function getListDonHang(traVeDanhSachSanPham = false) {
     return result;
 }
 
+// In hóa đơn
+function printInvoice(orderId) {
+    const token = localStorage.getItem('userToken');
+    
+    fetch(`http://localhost:3000/api/invoice/orders/${orderId}/invoice`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(r => r.text())
+    .then(html => {
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(html);
+        newWindow.document.close();
+    })
+    .catch(err => {
+        console.log('❌ Error:', err);
+        alert('Lỗi khi in hóa đơn!');
+    });
+}
+
+// Map order status to Vietnamese
+function mapOrderStatus(status) {
+    const statusMap = {
+        'pending': 'Chờ xử lý',
+        'approved': 'Đã duyệt - Chờ giao hàng', 
+        'shipping': 'Đang giao hàng',
+        'delivered': 'Đã giao hàng',
+        'cancelled': 'Đã hủy'
+    };
+    return statusMap[status] || status;
+}
+
+// Giao hàng
+async function giaoHang(maDonHang) {
+    if (!window.confirm('Xác nhận đơn hàng này đã được giao thành công?')) {
+        return;
+    }
+    
+    try {
+        const result = await AdminAPI.updateOrderStatus(maDonHang, 'delivered');
+        
+        if (result.error) {
+            alert('Lỗi cập nhật đơn hàng!');
+            return;
+        }
+        
+        // Reload table
+        await addTableDonHang();
+        
+        alert('Đã cập nhật trạng thái giao hàng thành công!');
+        
+    } catch (error) {
+        console.error('Error updating delivery status:', error);
+        alert('Lỗi kết nối!');
+    }
+}
+
 // Duyệt
 async function duyet(maDonHang, duyetDon) {
     try {
-        const newStatus = duyetDon ? 'Đã giao hàng' : 'Đã hủy';
+        const newStatus = duyetDon ? 'approved' : 'cancelled';
         
         if (!duyetDon && !window.confirm('Bạn có chắc muốn hủy đơn hàng này. Hành động này sẽ không thể khôi phục lại !')) {
             return;
