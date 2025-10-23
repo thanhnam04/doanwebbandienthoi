@@ -240,21 +240,39 @@ function openTab(nameTab) {
 
 // ========================== Sản Phẩm ========================
 // Vẽ bảng danh sách sản phẩm
-function addTableProducts() {
+async function addTableProducts() {
     var tc = document.getElementsByClassName('sanpham')[0].getElementsByClassName('table-content')[0];
     var s = `<table class="table-outline hideImg">`;
 
+    // Lấy stock data từ API
+    let stockData = {};
+    try {
+        const inventory = await fetch('http://localhost:3000/api/inventory').then(r => r.json());
+        inventory.forEach(item => {
+            stockData[item.masp] = item.stock;
+        });
+    } catch (error) {
+        console.error('Error loading stock:', error);
+    }
+
     for (var i = 0; i < list_products.length; i++) {
         var p = list_products[i];
+        var stock = stockData[p.masp] || 0;
+        
         s += `<tr>
             <td style="width: 5%">` + (i+1) + `</td>
-            <td style="width: 10%">` + p.masp + `</td>
-            <td style="width: 40%">
+            <td style="width: 8%">` + p.masp + `</td>
+            <td style="width: 35%">
                 <a title="Xem chi tiết" target="_blank" href="chitietsanpham.html?` + p.name.split(' ').join('-') + `">` + p.name + `</a>
                 <img src="` + (p.img || '') + `" onerror="this.style.display='none'"></img>
             </td>
-            <td style="width: 15%">` + p.price + `</td>
-            <td style="width: 15%">` + promoToStringValue(p.promo) + `</td>
+            <td style="width: 12%">` + p.price + `</td>
+            <td style="width: 8%">
+                <input type="number" value="` + stock + `" min="0" 
+                       onchange="updateStock('` + p.masp + `', this.value)" 
+                       style="width: 60px; text-align: center;">
+            </td>
+            <td style="width: 12%">` + promoToStringValue(p.promo) + `</td>
             <td style="width: 15%">
                 <div class="tooltip">
                     <i class="fa fa-wrench" onclick="addKhungSuaSanPham('` + p.masp + `')"></i>
@@ -276,21 +294,31 @@ function addTableProducts() {
 // Tìm kiếm
 function timKiemSanPham(inp) {
     var kieuTim = document.getElementsByName('kieuTimSanPham')[0].value;
-    var text = inp.value;
+    var text = inp.value.trim();
 
     // Lọc
     var vitriKieuTim = {'ma':1, 'ten':2}; // mảng lưu vị trí cột
 
     var listTr_table = document.getElementsByClassName('sanpham')[0].getElementsByClassName('table-content')[0].getElementsByTagName('tr');
+    var count = 0;
+    
     for (var tr of listTr_table) {
-        var td = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]].innerHTML.toLowerCase();
-
-        if (td.indexOf(text.toLowerCase()) < 0) {
-            tr.style.display = 'none';
-        } else {
+        var tdElement = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]];
+        if (!tdElement) continue;
+        
+        var td = tdElement.innerHTML.toLowerCase();
+        // Xử lý trường hợp có thẻ HTML trong tên sản phẩm
+        var textContent = tdElement.textContent || tdElement.innerText || '';
+        
+        if (text === '' || td.indexOf(text.toLowerCase()) >= 0 || textContent.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
             tr.style.display = '';
+            count++;
+        } else {
+            tr.style.display = 'none';
         }
     }
+    
+    console.log(`Tìm thấy ${count} sản phẩm với từ khóa: "${text}"`);
 }
 
 // Thêm
@@ -614,6 +642,31 @@ function addKhungSuaSanPham(masp) {
     khung.style.transform = 'scale(1)';
 }
 
+// Cập nhật stock sản phẩm
+async function updateStock(masp, newStock) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/inventory/products/${masp}/stock`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({stock: parseInt(newStock)})
+        });
+        
+        const result = await response.json();
+        
+        if (result.error) {
+            alert('Lỗi cập nhật stock: ' + result.error);
+            // Reload table để khôi phục giá trị cũ
+            addTableProducts();
+        } else {
+            console.log(`✅ Updated ${masp} stock to ${newStock}`);
+        }
+    } catch (error) {
+        console.error('Error updating stock:', error);
+        alert('Lỗi kết nối!');
+        addTableProducts();
+    }
+}
+
 // Cập nhật ảnh sản phẩm
 function capNhatAnhSanPham(files, id) {
     const reader = new FileReader();
@@ -647,7 +700,8 @@ function getValueOfTypeInTable_SanPham(tr, loai) {
         case 'masp' : return td[1].innerHTML.toLowerCase();
         case 'ten' : return td[2].innerHTML.toLowerCase();
         case 'gia' : return stringToNum(td[3].innerHTML);
-        case 'khuyenmai' : return td[4].innerHTML.toLowerCase();
+        case 'kho' : return Number(td[4].getElementsByTagName('input')[0].value);
+        case 'khuyenmai' : return td[5].innerHTML.toLowerCase();
     }
     return false;
 }
@@ -697,7 +751,7 @@ async function addTableDonHang() {
         }
         
         s += `<tr>
-            <td style="width: 5%">` + (i+1) + `</td>
+            <td style="width: 5%">` + orderId + `</td>
             <td style="width: 13%">` + orderId + `</td>
             <td style="width: 7%">` + (d.fullname || d.username || d.user_id || 'N/A') + `</td>
             <td style="width: 20%">` + itemsDisplay + `</td>
@@ -789,23 +843,18 @@ function getListDonHang(traVeDanhSachSanPham = false) {
 
 // In hóa đơn
 function printInvoice(orderId) {
-    const token = localStorage.getItem('userToken');
-    
-    fetch(`http://localhost:3000/api/invoice/orders/${orderId}/invoice`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
+    try {
+        // Mở trực tiếp URL trong tab mới
+        const newWindow = window.open(`http://localhost:3000/api/invoice/orders/${orderId}/invoice`, '_blank');
+        
+        if (!newWindow) {
+            // Popup bị chặn
+            alert('Popup bị chặn! Vui lòng cho phép popup hoặc mở link thủ công: http://localhost:3000/api/invoice/orders/' + orderId + '/invoice');
         }
-    })
-    .then(r => r.text())
-    .then(html => {
-        const newWindow = window.open('', '_blank');
-        newWindow.document.write(html);
-        newWindow.document.close();
-    })
-    .catch(err => {
-        console.log('❌ Error:', err);
-        alert('Lỗi khi in hóa đơn!');
-    });
+    } catch (error) {
+        console.error('Print Invoice Error:', error);
+        alert('Lỗi khi in hóa đơn: ' + error.message);
+    }
 }
 
 // Map order status to Vietnamese
@@ -848,16 +897,20 @@ async function giaoHang(maDonHang) {
 // Duyệt
 async function duyet(maDonHang, duyetDon) {
     try {
-        const newStatus = duyetDon ? 'approved' : 'cancelled';
-        
         if (!duyetDon && !window.confirm('Bạn có chắc muốn hủy đơn hàng này. Hành động này sẽ không thể khôi phục lại !')) {
             return;
         }
         
-        const result = await AdminAPI.updateOrderStatus(maDonHang, newStatus);
+        // Sử dụng inventory API để duyệt/hủy đơn (có quản lý stock)
+        const endpoint = duyetDon ? 'approve' : 'cancel';
+        const response = await fetch(`http://localhost:3000/api/inventory/orders/${maDonHang}/${endpoint}`, {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
         
         if (result.error) {
-            alert('Lỗi cập nhật đơn hàng!');
+            alert('Lỗi: ' + result.error);
             return;
         }
         
@@ -865,6 +918,9 @@ async function duyet(maDonHang, duyetDon) {
         await addTableDonHang();
         
         alert(`Đã ${duyetDon ? 'duyệt' : 'hủy'} đơn hàng thành công!`);
+        if (result.stockUpdates && result.stockUpdates.length > 0) {
+            console.log('Stock updates:', result.stockUpdates);
+        }
         
     } catch (error) {
         console.error('Error updating order:', error);
@@ -873,39 +929,72 @@ async function duyet(maDonHang, duyetDon) {
 }
 
 function locDonHangTheoKhoangNgay() {
-    var from = document.getElementById('fromDate').valueAsDate;
-    var to = document.getElementById('toDate').valueAsDate;
+    var fromValue = document.getElementById('fromDate').value;
+    var toValue = document.getElementById('toDate').value;
+
+    // Validation
+    if (!fromValue || !toValue) {
+        alert('Vui lòng chọn cả ngày bắt đầu và ngày kết thúc!');
+        return;
+    }
+    
+    var from = new Date(fromValue);
+    var to = new Date(toValue);
+    
+    if (from > to) {
+        alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc!');
+        return;
+    }
 
     var listTr_table = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0].getElementsByTagName('tr');
+    var count = 0;
+    
     for (var tr of listTr_table) {
         var td = tr.getElementsByTagName('td')[5].innerHTML;
         var d = new Date(td);
+        
+        // Chỉ so sánh ngày, bỏ qua giờ
+        var orderDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        var fromDate = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+        var toDate = new Date(to.getFullYear(), to.getMonth(), to.getDate());
 
-        if (d >= from && d <= to) {
+        if (orderDate >= fromDate && orderDate <= toDate) {
             tr.style.display = '';
+            count++;
         } else {
             tr.style.display = 'none';
         }
     }
+    
+    console.log(`Tìm thấy ${count} đơn hàng trong khoảng thời gian từ ${from.toLocaleDateString()} đến ${to.toLocaleDateString()}`);
 }
 
 function timKiemDonHang(inp) {
     var kieuTim = document.getElementsByName('kieuTimDonHang')[0].value;
-    var text = inp.value;
+    var text = inp.value.trim();
 
     // Lọc
     var vitriKieuTim = {'ma':1, 'khachhang':2, 'trangThai':6};
 
     var listTr_table = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0].getElementsByTagName('tr');
+    var count = 0;
+    
     for (var tr of listTr_table) {
-        var td = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]].innerHTML.toLowerCase();
+        var tdElement = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]];
+        if (!tdElement) continue;
+        
+        var td = tdElement.innerHTML.toLowerCase();
+        var textContent = tdElement.textContent || tdElement.innerText || '';
 
-        if (td.indexOf(text.toLowerCase()) < 0) {
-            tr.style.display = 'none';
-        } else {
+        if (text === '' || td.indexOf(text.toLowerCase()) >= 0 || textContent.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
             tr.style.display = '';
+            count++;
+        } else {
+            tr.style.display = 'none';
         }
     }
+    
+    console.log(`Tìm thấy ${count} đơn hàng với từ khóa: "${text}"`);
 }
 
 // Sắp xếp
@@ -979,21 +1068,30 @@ async function addTableKhachHang() {
 // Tìm kiếm
 function timKiemNguoiDung(inp) {
     var kieuTim = document.getElementsByName('kieuTimKhachHang')[0].value;
-    var text = inp.value;
+    var text = inp.value.trim();
 
     // Lọc
     var vitriKieuTim = {'ten':1, 'email':2, 'taikhoan':3};
 
     var listTr_table = document.getElementsByClassName('khachhang')[0].getElementsByClassName('table-content')[0].getElementsByTagName('tr');
+    var count = 0;
+    
     for (var tr of listTr_table) {
-        var td = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]].innerHTML.toLowerCase();
+        var tdElement = tr.getElementsByTagName('td')[vitriKieuTim[kieuTim]];
+        if (!tdElement) continue;
+        
+        var td = tdElement.innerHTML.toLowerCase();
+        var textContent = tdElement.textContent || tdElement.innerText || '';
 
-        if (td.indexOf(text.toLowerCase()) < 0) {
-            tr.style.display = 'none';
-        } else {
+        if (text === '' || td.indexOf(text.toLowerCase()) >= 0 || textContent.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
             tr.style.display = '';
+            count++;
+        } else {
+            tr.style.display = 'none';
         }
     }
+    
+    console.log(`Tìm thấy ${count} khách hàng với từ khóa: "${text}"`);
 }
 
 function openThemNguoiDung() {
@@ -1032,6 +1130,7 @@ async function xoaNguoiDung(userId) {
             // Reload tables and charts
             await addTableKhachHang();
             await addTableDonHang();
+            await addTableProducts(); // Reload stock
             await addThongKe(); // Reload charts
             
             alert('Xóa người dùng thành công!');

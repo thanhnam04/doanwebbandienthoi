@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('./database');
 const { authenticateToken, isAdmin } = require('./middleware');
+const products = require('../data/products.js');
 
 // API in hóa đơn PDF
-router.get('/orders/:id/invoice', authenticateToken, isAdmin, (req, res) => {
+router.get('/orders/:id/invoice', (req, res) => {
   const orderId = req.params.id;
 
   // Lấy thông tin đơn hàng
@@ -35,7 +36,7 @@ router.get('/orders/:id/invoice', authenticateToken, isAdmin, (req, res) => {
 });
 
 // API lấy dữ liệu hóa đơn dạng JSON (để frontend tự tạo PDF)
-router.get('/orders/:id/invoice-data', authenticateToken, isAdmin, (req, res) => {
+router.get('/orders/:id/invoice-data', (req, res) => {
   const orderId = req.params.id;
 
   db.get(`SELECT o.*, u.fullname, u.email, u.phone, u.address 
@@ -80,10 +81,14 @@ function generateInvoiceHTML(order, items) {
     const itemTotal = item.price * item.quantity;
     totalAmount += itemTotal;
     
+    const product = products.find(p => p.masp === item.masp);
+    const productName = product ? product.name : item.masp;
+    
     itemsHTML += `
       <tr>
         <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${index + 1}</td>
         <td style="border: 1px solid #ddd; padding: 8px;">${item.masp}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">${productName}</td>
         <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.quantity}</td>
         <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${formatPrice(item.price)}</td>
         <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${formatPrice(itemTotal)}</td>
@@ -125,10 +130,10 @@ function generateInvoiceHTML(order, items) {
 
       <div class="customer-info">
         <h3>Thông tin khách hàng:</h3>
-        <p><strong>Họ tên:</strong> ${order.fullname}</p>
-        <p><strong>Email:</strong> ${order.email}</p>
-        <p><strong>Điện thoại:</strong> ${order.phone}</p>
-        <p><strong>Địa chỉ:</strong> ${order.address}</p>
+        <p><strong>Họ tên:</strong> ${order.fullname || 'N/A'}</p>
+        <p><strong>Email:</strong> ${order.email || 'N/A'}</p>
+        <p><strong>Điện thoại:</strong> ${order.phone || 'N/A'}</p>
+        <p><strong>Địa chỉ:</strong> ${order.address || 'N/A'}</p>
       </div>
 
       <table class="invoice-table">
@@ -136,6 +141,7 @@ function generateInvoiceHTML(order, items) {
           <tr style="background-color: #f0f0f0;">
             <th style="border: 1px solid #ddd; padding: 10px;">STT</th>
             <th style="border: 1px solid #ddd; padding: 10px;">Mã SP</th>
+            <th style="border: 1px solid #ddd; padding: 10px;">Tên sản phẩm</th>
             <th style="border: 1px solid #ddd; padding: 10px;">Số lượng</th>
             <th style="border: 1px solid #ddd; padding: 10px;">Đơn giá</th>
             <th style="border: 1px solid #ddd; padding: 10px;">Thành tiền</th>
@@ -144,7 +150,7 @@ function generateInvoiceHTML(order, items) {
         <tbody>
           ${itemsHTML}
           <tr class="total-row">
-            <td colspan="4" style="border: 1px solid #ddd; padding: 10px; text-align: right;"><strong>TỔNG CỘNG:</strong></td>
+            <td colspan="5" style="border: 1px solid #ddd; padding: 10px; text-align: right;"><strong>TỔNG CỘNG:</strong></td>
             <td style="border: 1px solid #ddd; padding: 10px; text-align: right;"><strong>${formatPrice(order.total_amount)}</strong></td>
           </tr>
         </tbody>
@@ -153,7 +159,7 @@ function generateInvoiceHTML(order, items) {
       <div style="margin-top: 50px;">
         <div style="float: left;">
           <p><strong>Người mua hàng</strong></p>
-          <p style="margin-top: 60px;">${order.fullname}</p>
+          <p style="margin-top: 60px;">${order.fullname || 'Khách hàng'}</p>
         </div>
         <div style="float: right;">
           <p><strong>Người bán hàng</strong></p>

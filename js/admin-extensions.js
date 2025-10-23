@@ -2,7 +2,7 @@
 function printInvoice(orderId) {
     const token = localStorage.getItem('userToken'); // SỬA: userToken
     
-    fetch(`http://localhost:3001/api/invoice/orders/${orderId}/invoice`, { // SỬA: 3001
+    fetch(`http://localhost:3000/api/invoice/orders/${orderId}/invoice`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

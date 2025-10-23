@@ -1,6 +1,6 @@
 # 📱 NAPC Smartphone Store
 
-> Đồ án môn **Phân tích thiết kế hệ thống thông tin** - Trang web bán điện thoại với kiến trúc Frontend-Backend hoàn chỉnh
+> Đồ án môn **Phân tích thiết kế hệ thống thông tin** - Trang web bán điện thoại với kiến trúc Frontend-Backend hoàn chỉnh.
 
 ## 🚀 Tổng quan
 
@@ -14,38 +14,26 @@ Hệ thống e-commerce bán điện thoại với giao diện thân thiện, ch
 ## ⚡ Cài đặt và Chạy
 
 ### 1. Yêu cầu hệ thống
+```bash
 - Node.js >= 14.0.0
 - npm >= 6.0.0
+```
 
 ### 2. Cài đặt Backend
 ```bash
-# Di chuyển vào thư mục backend
-cd backend
-
-# Cài đặt dependencies
-npm install
-
-# Khởi tạo database
-npm run init-db
-
-# Chạy server (Development)
-npm run dev
-
-# Hoặc chạy Production
-npm start
+cd backend        # Vào thư mục backend
+npm install       # Cài đặt dependencies
+npm start         # Chạy server
 ```
 
 ### 3. Chạy Frontend
 ```bash
 # Mở file index.html bằng Live Server
-# Hoặc serve static files:
-python -m http.server 8080
 # Truy cập: http://localhost:8080
 ```
 
 ### 4. Truy cập ứng dụng
 - **Frontend**: http://localhost:8080
-- **Backend API**: http://localhost:3000
 - **Admin Panel**: http://localhost:8080/admin.html
 
 ## 🏗️ Kiến trúc hệ thống
@@ -237,54 +225,60 @@ CREATE TABLE order_items (
 **Username**: `admini`  
 **Password**: `adadad`
 
-## 🚦 Trạng thái dự án
+## 🚦 Dự án
 
--  **Frontend-Backend Integration** - Hoàn thành
+#### 🛒 **A.1: Người mua hàng**
+-  **Xem thông tin hàng hóa** - Trang chủ, chi tiết sản phẩm
+-  **Tìm kiếm sản phẩm** - Real-time search
+-  **Lọc theo giá/tên** - Filter hãng, giá, sắp xếp
+-  **Chức năng mua hàng** - Giỏ hàng, thanh toán
+
+#### 👨💼 **A.2: Nhân viên bán hàng (Admin)**
+-  **Duyệt đơn hàng** - Cập nhật trạng thái, giảm stock
+-  **Hủy đơn hàng** - Hoàn trả stock nếu đã duyệt
+-  **In hóa đơn** - PDF invoice tự động
+-  **Xem hóa đơn theo thời gian** - Date picker với validation
+-  **Thống kê báo cáo** - Charts doanh thu theo hãng
+-  **Quản lý sản phẩm** - CRUD hoàn chỉnh
+
+#### 🏪 **Quản lý kho hàng**
+-  **Stock tự động** - Giảm khi duyệt, tăng khi hủy đơn
+-  **Validation** - Kiểm tra đủ hàng trước khi duyệt
+-  **Cập nhật real-time** - Admin có thể điều chỉnh stock
+
+### 🔧 **Tính năng kỹ thuật**
+-  **Frontend-Backend Integration** - API-driven architecture
 -  **Authentication System** - JWT tokens
--  **CRUD Operations** - Products, Orders, Users
--  **Admin Dashboard** - Statistics & Management
--  **Shopping Cart** - Full functionality
+-  **Database** - SQLite với inventory management
+-  **Admin Dashboard** - Statistics với Chart.js
+-  **Shopping Cart** - Full CRUD operations
 -  **Order Management** - Complete workflow
+-  **Date Picker** - Filter đơn hàng theo thời gian
+-  **Search & Filter** - Real-time với validation
 -  **Responsive Design** - Mobile-friendly
 -  **Error Handling** - User-friendly messages
 -  **Security** - Input validation & protection
 
-## 🐛 Troubleshooting
-
-### Backend không khởi động
-```bash
-# Kiểm tra port 3000 có bị chiếm không
-netstat -ano | findstr :3000
-
-# Thay đổi port trong server.js nếu cần
-const PORT = process.env.PORT || 3001;
-```
-
-### Database lỗi
-```bash
-# Xóa database cũ và tạo lại
-rm backend/database.db
-npm run init-db
-```
-
-### CORS errors
-- Đảm bảo backend đang chạy trên port 3000
-- Kiểm tra CORS configuration trong server.js
-
 ## 📝 Changelog
 
-### v2.0.0 (Latest)
+### v3.0.0 (Latest - Production Ready)
+-  Quản lý kho hàng tự động (stock management)
+-  Date picker với validation đầy đủ
+-  Search & Filter real-time cho tất cả modules
+-  PDF invoice generation
+-  Thống kê doanh thu theo hãng
+-  Error handling và user feedback
+-  Console logging cho debugging
+
+### v2.0.0
 -  Hoàn thành tích hợp Frontend-Backend
--  Loại bỏ localStorage fallbacks
--  Thêm JWT authentication
+-  JWT authentication
 -  API-driven architecture
--  Responsive admin dashboard
--  Real-time statistics
+-  Admin dashboard với Chart.js
 
 ### v1.0.0
 -  Static website với localStorage
 -  Basic CRUD operations
--  Simple authentication
 
 ## 👥 Contributors
 
@@ -295,8 +289,6 @@ npm run init-db
 - Bùi Tấn Phát
 
 ---
-
-**🎉 Dự án hoàn thành với kiến trúc Frontend-Backend hiện đại, sẵn sàng cho production!**
 
 ## 📸 Screenshots
 

@@ -39,6 +39,30 @@ db.serialize(() => {
     FOREIGN KEY (order_id) REFERENCES orders (id)
   )`);
 
+  // Inventory table
+  db.run(`CREATE TABLE IF NOT EXISTS inventory (
+    masp TEXT PRIMARY KEY,
+    stock INTEGER DEFAULT 25
+  )`);
+
+  // Initialize inventory for all products only if no orders exist
+  const products = require('../data/products.js');
+  db.get(`SELECT COUNT(*) as count FROM orders`, (err, row) => {
+    if (!err && row.count === 0) {
+      // Chỉ reset stock khi không có đơn hàng nào
+      products.forEach(product => {
+        db.run(`INSERT OR REPLACE INTO inventory (masp, stock) VALUES (?, ?)`, 
+               [product.masp, 25]);
+      });
+    } else {
+      // Nếu có đơn hàng, chỉ thêm sản phẩm mới chưa có trong inventory
+      products.forEach(product => {
+        db.run(`INSERT OR IGNORE INTO inventory (masp, stock) VALUES (?, ?)`, 
+               [product.masp, 25]);
+      });
+    }
+  });
+
   // Insert admin user if not exists
   db.get("SELECT * FROM users WHERE username = 'admin'", (err, row) => {
     if (!row) {

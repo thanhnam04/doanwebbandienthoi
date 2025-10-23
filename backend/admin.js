@@ -32,7 +32,7 @@ router.get('/orders', (req, res) => {
     query += conditions.join(' AND ');
   }
   
-  query += ' GROUP BY o.id ORDER BY o.created_at DESC';
+  query += ' GROUP BY o.id ORDER BY o.id ASC';
   
   db.all(query, params, (err, orders) => {
     if (err) {
@@ -75,31 +75,79 @@ router.get('/users', (req, res) => {
 router.delete('/users/:userId', (req, res) => {
   const userId = req.params.userId;
   
-  // Delete user and cascade delete orders and order_items
-  db.serialize(() => {
-    db.run('DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)', [userId]);
-    db.run('DELETE FROM orders WHERE user_id = ?', [userId]);
-    db.run(
-      'DELETE FROM users WHERE id = ? AND role != "admin"',
-      [userId],
-      function(err) {
-        if (err) {
-          return res.status(400).json({ error: 'Failed to delete user' });
-        }
-        
-        // Clear cart from server memory  
-        try {
-          const serverModule = require('./server');
-          if (serverModule.carts && serverModule.carts[userId]) {
-            delete serverModule.carts[userId];
+  // Hoàn trả stock từ các đơn hàng đã duyệt trước khi xóa
+  db.all(`SELECT oi.masp, oi.quantity 
+          FROM order_items oi 
+          JOIN orders o ON oi.order_id = o.id 
+          WHERE o.user_id = ? AND (o.status = 'approved' OR o.status = 'delivered')`, [userId], (err, approvedItems) => {
+    if (err) {
+      return res.status(400).json({ error: 'Failed to get user orders' });
+    }
+    
+    // Hoàn trả stock
+    let restoredItems = 0;
+    const totalItems = approvedItems.length;
+    
+    if (totalItems === 0) {
+      // Không có đơn đã duyệt, xóa trực tiếp
+      deleteUserData();
+    } else {
+      // Hoàn trả stock cho từng item
+      approvedItems.forEach(item => {
+        db.run('UPDATE inventory SET stock = stock + ? WHERE masp = ?', 
+               [item.quantity, item.masp], (err) => {
+          if (!err) {
+            console.log(`📦 Restored ${item.quantity} units of ${item.masp}`);
           }
-        } catch (e) {
-          console.log('Could not clear cart from memory:', e.message);
-        }
-        
-        res.json({ message: 'User deleted successfully' });
-      }
-    );
+          
+          restoredItems++;
+          if (restoredItems === totalItems) {
+            deleteUserData();
+          }
+        });
+      });
+    }
+    
+    function deleteUserData() {
+      // Delete user and cascade delete orders and order_items
+      db.serialize(() => {
+        db.run('DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)', [userId]);
+        db.run('DELETE FROM orders WHERE user_id = ?', [userId]);
+        db.run(
+          'DELETE FROM users WHERE id = ? AND role != "admin"',
+          [userId],
+          function(err) {
+            if (err) {
+              return res.status(400).json({ error: 'Failed to delete user' });
+            }
+            
+            // Reset AUTO_INCREMENT if no orders left
+            db.get('SELECT COUNT(*) as count FROM orders', (err, result) => {
+              if (!err && result.count === 0) {
+                db.run('DELETE FROM sqlite_sequence WHERE name="orders"');
+                db.run('DELETE FROM sqlite_sequence WHERE name="order_items"');
+                console.log('🔄 Reset AUTO_INCREMENT - Next order will be ID 1');
+              }
+            });
+            
+            // Clear cart from server memory  
+            try {
+              const serverModule = require('./server');
+              if (serverModule.carts && serverModule.carts[userId]) {
+                delete serverModule.carts[userId];
+              }
+            } catch (e) {
+              console.log('Could not clear cart from memory:', e.message);
+            }
+            
+            res.json({ 
+              message: 'User deleted successfully',
+              stockRestored: totalItems > 0 ? `Restored stock for ${totalItems} items` : 'No stock to restore'
+            });
+          }
+        );
+      });
+    }
   });
 });
 
