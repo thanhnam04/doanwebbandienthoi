@@ -9,7 +9,7 @@ const orderRoutes = require('./orders');
 const adminRoutes = require('./admin');
 const inventoryRoutes = require('./inventory');
 const invoiceRoutes = require('./invoice');
-const resetRoutes = require('./reset');
+
 const db = require('./database');
 const { errorHandler, successResponse, errorResponse } = require('./middleware');
 
@@ -218,7 +218,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/invoice', invoiceRoutes);
-app.use('/api/reset', resetRoutes);
+
 
 // Error handling middleware (must be last)
 app.use(errorHandler);

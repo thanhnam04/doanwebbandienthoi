@@ -28,13 +28,13 @@ npm start         # Chạy server
 
 ### 3. Chạy Frontend
 ```bash
-# Mở file index.html bằng Live Server
-# Truy cập: http://localhost:8080
+# Mở file index.html bằng Live Server (VS Code)
+# Hoặc mở trực tiếp file index.html bằng browser
 ```
 
 ### 4. Truy cập ứng dụng
-- **Frontend**: http://localhost:8080
-- **Admin Panel**: http://localhost:8080/admin.html
+- **Frontend**: http://localhost:5500
+- **Admin Panel**: http://localhost:5500/admin.html
 
 ## 🏗️ Kiến trúc hệ thống
 
@@ -45,10 +45,16 @@ npm start         # Chạy server
 ├── giohang.html           # Giỏ hàng
 ├── nguoidung.html         # Trang người dùng
 ├── chitietsanpham.html    # Chi tiết sản phẩm
+├── gioithieu.html         # Trang giới thiệu
+├── lienhe.html            # Trang liên hệ
+├── tintuc.html            # Trang tin tức
+├── trungtambaohanh.html   # Trang bảo hành
+├── tuyendung.html         # Trang tuyển dụng
 ├── css/                   # Stylesheets
 ├── js/                    # JavaScript modules
 │   ├── api.js            # API client
 │   ├── admin.js          # Admin functions
+│   ├── admin-extensions.js # Admin utilities
 │   ├── dungchung.js      # Common utilities
 │   ├── trangchu.js       # Homepage logic
 │   ├── giohang.js        # Cart functionality
@@ -65,11 +71,13 @@ npm start         # Chạy server
 ```
 backend/
 ├── server.js              # Main server file
-├── database.js            # Database connection
+├── database.js            # Database connection & initialization
 ├── middleware.js          # Auth middleware
 ├── auth.js               # Authentication routes
 ├── orders.js             # Order management
 ├── admin.js              # Admin routes
+├── inventory.js          # Stock management
+├── invoice.js            # PDF invoice generation
 ├── package.json          # Dependencies
 └── database.db           # SQLite database
 ```
