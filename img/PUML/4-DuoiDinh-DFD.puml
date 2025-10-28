@@ -1,0 +1,22 @@
+@startuml
+rectangle "3.1: Tạo đơn hàng" as P31
+rectangle "3.2: Duyệt đơn hàng" as P32
+rectangle "3.3: Cập nhật trạng thái" as P33
+rectangle "3.4: Hủy đơn hàng" as P34
+rectangle "3.5: In hóa đơn" as P35
+
+database "D1: Users" as D1
+database "D3: Orders" as D3
+database "D4: Order_Items" as D4
+database "D5: Inventory" as D5
+
+P31 --> D3 : Thông tin đơn hàng
+P31 --> D4 : Chi tiết sản phẩm
+P31 --> D5 : Cập nhật stock
+P31 <-- D1 : Thông tin khách hàng
+
+P32 --> D3
+P33 --> D3
+P34 --> D3
+P35 --> D3
+@enduml

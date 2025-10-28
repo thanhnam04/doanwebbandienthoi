@@ -1,0 +1,22 @@
+@startuml
+rectangle "Quản lý người dùng" as P1
+rectangle "Quản lý sản phẩm" as P2
+rectangle "Xử lý đơn hàng" as P3
+rectangle "Quản lý kho hàng" as P4
+rectangle "Báo cáo thống kê" as P5
+
+database "D1: Users" as D1
+database "D2: Products" as D2
+database "D3: Orders" as D3
+database "D4: Order_Items" as D4
+database "D5: Inventory" as D5
+
+P1 --> D1
+P2 --> D2
+P3 --> D3
+P3 --> D4
+P4 --> D5
+P5 --> D3
+P5 --> D1
+P5 --> D2
+@enduml

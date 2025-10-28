@@ -1,0 +1,29 @@
+@startuml
+left to right direction
+actor KhachHang
+actor Admin
+
+package "Use Cases - Khách hàng" {
+  KhachHang --> (Xem sản phẩm)
+  KhachHang --> (Tìm kiếm sản phẩm)
+  KhachHang --> (Lọc sản phẩm)
+  KhachHang --> (Đăng ký tài khoản)
+  KhachHang --> (Đăng nhập)
+  KhachHang --> (Thêm vào giỏ hàng)
+  KhachHang --> (Xem giỏ hàng)
+  KhachHang --> (Đặt hàng)
+  KhachHang --> (Xem lịch sử đơn hàng)
+  KhachHang --> (Cập nhật thông tin cá nhân)
+}
+
+package "Use Cases - Admin" {
+  Admin --> (Đăng nhập admin)
+  Admin --> (Quản lý sản phẩm)
+  Admin --> (Quản lý đơn hàng)
+  Admin --> (Quản lý kho hàng)
+  Admin --> (In hóa đơn)
+  Admin --> (Xem thống kê doanh thu)
+  Admin --> (Quản lý khách hàng)
+  Admin --> (Lọc đơn hàng theo thời gian)
+}
+@enduml

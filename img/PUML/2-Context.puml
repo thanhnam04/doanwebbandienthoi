@@ -1,0 +1,16 @@
+@startuml
+rectangle "NAPC Smartphone Store System" {
+}
+
+actor KhachHang
+actor Admin
+database Database
+
+KhachHang --> "NAPC Smartphone Store System" : Gửi thông tin đăng ký, đơn hàng
+"NAPC Smartphone Store System" --> KhachHang : Trả thông tin sản phẩm, hóa đơn
+
+Admin --> "NAPC Smartphone Store System" : Gửi thông tin quản lý
+"NAPC Smartphone Store System" --> Admin : Trả báo cáo, thống kê
+
+"NAPC Smartphone Store System" --> Database : Lưu trữ dữ liệu
+@enduml
