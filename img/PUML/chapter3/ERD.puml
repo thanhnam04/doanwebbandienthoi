@@ -1,0 +1,38 @@
+@startuml
+entity USERS {
+  **id** : int
+  username : varchar
+  email : varchar
+  password : varchar
+  fullname : varchar
+  phone : varchar
+  address : varchar
+  role : varchar
+  created_at : datetime
+}
+
+entity ORDERS {
+  **id** : int
+  user_id : int (FK)
+  total_amount : decimal
+  status : varchar
+  created_at : datetime
+}
+
+entity ORDER_ITEMS {
+  **id** : int
+  order_id : int (FK)
+  masp : varchar (FK)
+  quantity : int
+  price : decimal
+}
+
+entity INVENTORY {
+  **masp** : varchar
+  stock : int
+}
+
+USERS ||--o{ ORDERS : "1-n"
+ORDERS ||--o{ ORDER_ITEMS : "1-n"
+INVENTORY ||--o{ ORDER_ITEMS : "1-n"
+@enduml
