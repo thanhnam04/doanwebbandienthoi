@@ -1,0 +1,33 @@
+@startuml
+entity "Users" as Users {
+  *id : int <<PK>>
+  username : string
+  email : string
+  password : string
+}
+
+entity "Orders" as Orders {
+  *id : int <<PK>>
+  user_id : int <<FK>>
+  order_date : date
+  status : string
+}
+
+entity "Order_Items" as Items {
+  *id : int <<PK>>
+  order_id : int <<FK>>
+  product_id : int
+  quantity : int
+}
+
+entity "Inventory" as Inventory {
+  *id : int <<PK>>
+  product_name : string
+  stock : int
+  price : float
+}
+
+Users ||--o{ Orders : "1-n"
+Orders ||--o{ Items : "1-n"
+Inventory ||--o{ Items : "1-n"
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+actor "Client"
+actor "Server"
+
+rectangle "1️⃣ Login\nClient gửi thông tin đăng nhập" as Step1
+rectangle "2️⃣ Generate\nServer tạo JWT" as Step2
+rectangle "3️⃣ Store\nClient lưu token" as Step3
+rectangle "4️⃣ Request\nClient gửi request kèm token" as Step4
+rectangle "5️⃣ Verify\nServer xác thực JWT" as Step5
+rectangle "6️⃣ Response\nServer phản hồi dữ liệu" as Step6
+
+Client --> Step1
+Step1 --> Server
+Server --> Step2
+Step2 --> Client
+Client --> Step3
+Client --> Step4
+Step4 --> Server
+Server --> Step5
+Step5 --> Step6
+Step6 --> Client
+
+note right of Step2
+  Token chứa thông tin người dùng
+  và thời gian hết hạn
+end note
+
+note bottom of Step5
+  Nếu token hợp lệ → tiếp tục xử lý
+  Nếu không → trả lỗi xác thực
+end note
+@enduml

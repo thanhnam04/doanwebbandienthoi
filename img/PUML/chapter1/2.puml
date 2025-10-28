@@ -1,0 +1,37 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #2C3E50
+skinparam ArrowThickness 1.5
+skinparam linetype ortho
+
+' Event Loop ở trung tâm
+circle "Event Loop\n(Single Thread)" as EL #FFEB99
+
+' Các request vào từ nhiều hướng
+cloud "Request 1\nAPI Call" as R1 #D6EAF8
+cloud "Request 2\nFile Read" as R2 #D6EAF8
+cloud "Request 3\nDB Query" as R3 #D6EAF8
+cloud "Request 4\nTimer" as R4 #D6EAF8
+
+R1 --> EL
+R2 --> EL
+R3 --> EL
+R4 --> EL
+
+' Các response ra từ Event Loop
+rectangle "Response 1\nCallback" as Res1 #D5F5E3
+rectangle "Response 2\nFile Data" as Res2 #D5F5E3
+rectangle "Response 3\nQuery Result" as Res3 #D5F5E3
+rectangle "Response 4\nTimeout Trigger" as Res4 #D5F5E3
+
+EL --> Res1
+EL --> Res2
+EL --> Res3
+EL --> Res4
+
+note bottom of EL
+  Node.js sử dụng Event Loop để xử lý\nI/O bất đồng bộ (Non-blocking I/O)
+end note
+@enduml

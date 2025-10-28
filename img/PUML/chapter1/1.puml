@@ -1,0 +1,20 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor<<Client>> #FDF6E3
+  BackgroundColor<<Routes>> #EEE8D5
+  BackgroundColor<<Controllers>> #E0E0E0
+  BackgroundColor<<Database>> #D6EAF8
+}
+
+rectangle "Client\n(index.html)" <<Client>> as C
+rectangle "Routes\n(routes/productRoutes.js)" <<Routes>> as R
+rectangle "Controllers\ncontrollers/productController.js" <<Controllers>> as CT
+rectangle "Database\nmodels/productModel.js" <<Database>> as DB
+
+C --> R : HTTP Request
+R --> CT : Route Handler
+CT --> DB : Query/CRUD
+DB --> CT : Data
+CT --> R : Response
+R --> C : Render/JSON
+@enduml
