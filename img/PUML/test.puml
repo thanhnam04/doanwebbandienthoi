@@ -1,0 +1,7 @@
+@startuml
+skinparam node {
+  BorderColor transparent
+  BackgroundColor #f5f5f5
+}
+node "Khung tuỳ chỉnh không viền" as N1
+@enduml

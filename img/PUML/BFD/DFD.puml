@@ -1,50 +1,62 @@
-@startuml
-title DFD - Hệ thống Bán hàng
+@startuml DFD
+title Data Flow Diagram (DFD) - Quản lý bán hàng điện thoại online
 
-skinparam rectangle {
-  BackgroundColor #E3F2FD
-  BorderColor #1565C0
-  FontSize 14
-  FontColor black
-}
+' Level 0 - Context Diagram
+actor "Khách hàng (Customer)" as Customer
+actor "Quản trị viên (Admin)" as Admin
+rectangle "Quản lý bán hàng điện thoại online" as Process0
 
-'--- Chức năng tổng ---
-rectangle "Hệ thống Bán hàng" as HT {
-}
+Customer --> Process0 : Thông tin đăng ký, đăng nhập, yêu cầu xem sản phẩm, thông tin giỏ hàng, đơn hàng
+Admin --> Process0 : Thông tin sản phẩm mới, cập nhật stock, duyệt/hủy đơn hàng
 
-'--- Nhánh 1: Người mua hàng ---
-rectangle "Người mua hàng" as NMH #FFF9C4
-rectangle "Xem thông tin hàng hoá, số lượng" as xem
-rectangle "Tìm kiếm dữ liệu hàng hoá" as timkiem
-rectangle "Lọc theo giá bán, tên sản phẩm" as loc
-rectangle "Thực hiện chức năng mua hàng" as muahang
+Process0 --> Customer : JWT token, thông tin profile, danh sách sản phẩm, chi tiết sản phẩm, xác nhận đơn hàng, lịch sử mua hàng
+Process0 --> Admin : Danh sách đơn hàng, báo cáo thống kê, báo cáo tồn kho
 
-HT -down-> NMH
-NMH -down-> xem
-NMH -down-> timkiem
-NMH -down-> loc
-NMH -down-> muahang
+' Level 1
+rectangle "1.0 Quản lý người dùng" as P1
+rectangle "2.0 Quản lý sản phẩm" as P2
+rectangle "3.0 Xử lý đơn hàng" as P3
+rectangle "4.0 Quản lý tồn kho" as P4
 
-'--- Nhánh 2: Nhân viên bán hàng ---
-rectangle "Nhân viên bán hàng" as NVBH #C8E6C9
-rectangle "Duyệt đơn hàng" as duyet
-rectangle "Hủy đơn hàng" as huy
-rectangle "In và lưu trữ hoá đơn" as inhoadon
-rectangle "Xem hoá đơn theo thời điểm" as xemhd
-rectangle "Xem thống kê, báo cáo bán hàng" as thongke
-rectangle "Thêm, sửa, xóa sản phẩm" as themsua
+database "D1: Users (Người dùng)" as D1
+database "D2: Products (Sản phẩm)" as D2
+database "D3: Orders (Đơn hàng)" as D3
+database "D4: Order_Items (Chi tiết đơn hàng)" as D4
+database "D5: Inventory (Tồn kho)" as D5
 
-HT -down-> NVBH
-NVBH -down-> duyet
-NVBH -down-> huy
-NVBH -down-> inhoadon
-NVBH -down-> xemhd
-NVBH -down-> thongke
-NVBH -down-> themsua
+Customer --> P1 : Thông tin đăng ký, đăng nhập
+Customer --> P2 : Yêu cầu xem sản phẩm
+Customer --> P3 : Thông tin giỏ hàng, đơn hàng
+Admin --> P2 : Thông tin sản phẩm mới
+Admin --> P4 : Cập nhật stock
+Admin --> P3 : Duyệt/hủy đơn hàng
 
-note right of NVBH
-Khi duyệt đơn hàng → số sản phẩm trong kho giảm đi.
-Khi hủy đơn hàng → sản phẩm được trả lại kho.
-end note
+P1 --> D1 : Thông tin user
+P2 --> D2 : Dữ liệu sản phẩm
+P3 --> D3 : Thông tin đơn hàng
+P3 --> D4 : Chi tiết sản phẩm trong đơn
+P3 --> P4 : Yêu cầu cập nhật stock
+P4 --> D5 : Thông tin tồn kho
+
+P1 --> Customer : JWT token, thông tin profile
+P2 --> Customer : Danh sách sản phẩm, chi tiết sản phẩm
+P3 --> Customer : Xác nhận đơn hàng, lịch sử mua hàng
+P3 --> Admin : Danh sách đơn hàng, báo cáo thống kê
+P4 --> Admin : Báo cáo tồn kho
+
+' Level 2 - Detailed for 3.0
+rectangle "3.1 Quản lý giỏ hàng" as P3_1
+rectangle "3.2 Tạo đơn hàng" as P3_2
+rectangle "3.3 Xử lý thanh toán" as P3_3
+rectangle "3.4 Cập nhật trạng thái" as P3_4
+
+Customer --> P3_1 : Thêm/sửa/xóa sản phẩm
+P3_1 --> P3_2 : Thông tin giỏ hàng
+P3_2 --> D3 : Tạo order mới
+P3_2 --> D4 : Chi tiết sản phẩm
+P3_2 --> P3_3 : Thông tin thanh toán
+Admin --> P3_4 : Duyệt/hủy đơn
+P3_4 --> P4 : Cập nhật stock
+P3_4 --> D3 : Cập nhật status
 
 @enduml

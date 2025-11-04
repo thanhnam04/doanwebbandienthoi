@@ -1,0 +1,29 @@
+@startuml BFD
+title Business Function Diagram (BFD) - Quản lý bán hàng điện thoại online
+
+' Level 0
+rectangle "Quản lý bán hàng điện thoại online" as L0
+
+' Level 1
+rectangle "1.0 Quản lý người dùng" as L1_1
+rectangle "2.0 Quản lý sản phẩm" as L1_2
+rectangle "3.0 Xử lý đơn hàng" as L1_3
+rectangle "4.0 Quản lý tồn kho" as L1_4
+
+L0 --> L1_1
+L0 --> L1_2
+L0 --> L1_3
+L0 --> L1_4
+
+' Level 2 for 3.0
+rectangle "3.1 Thêm sản phẩm vào giỏ hàng" as L2_1
+rectangle "3.2 Tính toán tổng tiền" as L2_2
+rectangle "3.3 Tạo đơn hàng" as L2_3
+rectangle "3.4 Cập nhật trạng thái đơn hàng" as L2_4
+
+L1_3 --> L2_1
+L1_3 --> L2_2
+L1_3 --> L2_3
+L1_3 --> L2_4
+
+@enduml
