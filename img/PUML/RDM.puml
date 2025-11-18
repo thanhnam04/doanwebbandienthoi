@@ -1,0 +1,49 @@
+@startuml
+
+entity "USERS" as USERS {
+    + id : int <<PK>>
+    --
+    username : varchar
+    email : varchar
+    password : varchar
+    fullname : varchar
+    phone : varchar
+    address : varchar
+    role : varchar
+    created_at : datetime
+}
+
+entity "ORDERS" as ORDERS {
+    + id : int <<PK>>
+    --
+    total_amount : decimal
+    status : varchar
+    created_at : datetime
+    user_id : int <<FK>>
+}
+
+entity "INVENTORY" as INVENTORY {
+    + masp : varchar <<PK>>
+    --
+    stock : int
+}
+
+entity "ORDER_ITEMS" as ORDER_ITEMS {
+    + id : int <<PK>>
+    --
+    quantity : int
+    price : decimal
+    order_id : int <<FK>>
+    masp : varchar <<FK>>
+}
+
+' Quan hệ 1-n USERS → ORDERS
+USERS ||..o{ ORDERS : "1-n"
+
+' Quan hệ 1-n ORDERS → ORDER_ITEMS
+ORDERS ||..o{ ORDER_ITEMS : "1-n"
+
+' Quan hệ 1-n INVENTORY → ORDER_ITEMS
+INVENTORY ||..o{ ORDER_ITEMS : "1-n"
+
+@enduml
