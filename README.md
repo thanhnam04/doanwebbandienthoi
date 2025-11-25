@@ -2,9 +2,19 @@
 
 > Đồ án môn **Phân tích thiết kế hệ thống thông tin** - Trang web bán điện thoại với kiến trúc Frontend-Backend hoàn chỉnh.
 
+## 👥 Contributors
+
+**Nhóm Chim sẻ đi nắng**
+
+- Trần Đức Anh - 3122480001
+- Phạm Kim Chung - 3122480006
+- Nguyễn Thành Nam - 3122480034
+- Bùi Tấn Phát - 3122480042
+
 ## 🚀 Tổng quan
 
 Hệ thống e-commerce bán điện thoại với giao diện thân thiện, chức năng đầy đủ và kiến trúc hiện đại:
+
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Backend**: Node.js + Express.js
 - **Database**: SQLite3
@@ -14,12 +24,14 @@ Hệ thống e-commerce bán điện thoại với giao diện thân thiện, ch
 ## ⚡ Cài đặt và Chạy
 
 ### 1. Yêu cầu hệ thống
+
 ```bash
 - Node.js >= 14.0.0
 - npm >= 6.0.0
 ```
 
 ### 2. Cài đặt Backend
+
 ```bash
 cd backend        # Vào thư mục backend
 npm install       # Cài đặt dependencies
@@ -27,18 +39,21 @@ npm start         # Chạy server
 ```
 
 ### 3. Chạy Frontend
+
 ```bash
 # Mở file index.html bằng Live Server (VS Code)
 # Hoặc mở trực tiếp file index.html bằng browser
 ```
 
 ### 4. Truy cập ứng dụng
+
 - **Frontend**: http://localhost:5500
 - **Admin Panel**: http://localhost:5500/admin.html
 
 ## 🏗️ Kiến trúc hệ thống
 
 ### Frontend Structure
+
 ```
 ├── index.html              # Trang chủ
 ├── admin.html              # Trang quản trị
@@ -68,6 +83,7 @@ npm start         # Chạy server
 ```
 
 ### Backend Structure
+
 ```
 backend/
 ├── server.js              # Main server file
@@ -85,25 +101,28 @@ backend/
 ## 🔧 Chức năng chính
 
 ### 👤 User Features
--  **Đăng ký/Đăng nhập** với JWT authentication
--  **Trang chủ** với sản phẩm phân loại (nổi bật, mới, khuyến mãi)
--  **Tìm kiếm/Lọc** sản phẩm theo hãng, giá, đánh giá
--  **Chi tiết sản phẩm** với gợi ý sản phẩm tương tự
--  **Giỏ hàng** với CRUD operations
--  **Thanh toán** và tạo đơn hàng
--  **Trang cá nhân** với lịch sử mua hàng
--  **Cập nhật thông tin** cá nhân
+
+- **Đăng ký/Đăng nhập** với JWT authentication
+- **Trang chủ** với sản phẩm phân loại (nổi bật, mới, khuyến mãi)
+- **Tìm kiếm/Lọc** sản phẩm theo hãng, giá, đánh giá
+- **Chi tiết sản phẩm** với gợi ý sản phẩm tương tự
+- **Giỏ hàng** với CRUD operations
+- **Thanh toán** và tạo đơn hàng
+- **Trang cá nhân** với lịch sử mua hàng
+- **Cập nhật thông tin** cá nhân
 
 ### 🛠️ Admin Features
--  **Dashboard** với thống kê doanh thu (Chart.js)
--  **Quản lý sản phẩm** (CRUD) với upload ảnh
--  **Quản lý đơn hàng** với cập nhật trạng thái
--  **Quản lý khách hàng** với khóa/mở tài khoản
--  **Báo cáo** doanh thu theo hãng
+
+- **Dashboard** với thống kê doanh thu (Chart.js)
+- **Quản lý sản phẩm** (CRUD) với upload ảnh
+- **Quản lý đơn hàng** với cập nhật trạng thái
+- **Quản lý khách hàng** với khóa/mở tài khoản
+- **Báo cáo** doanh thu theo hãng
 
 ## 🔌 API Endpoints
 
 ### Authentication
+
 ```
 POST /api/auth/register     # Đăng ký
 POST /api/auth/login        # Đăng nhập
@@ -112,6 +131,7 @@ PUT  /api/auth/profile/:id  # Cập nhật thông tin
 ```
 
 ### Products
+
 ```
 GET  /api/products          # Lấy tất cả sản phẩm
 GET  /api/products/:id      # Lấy sản phẩm theo ID
@@ -121,6 +141,7 @@ DELETE /api/admin/products/:id # Xóa sản phẩm (Admin)
 ```
 
 ### Cart & Orders
+
 ```
 GET  /api/cart/:userId      # Lấy giỏ hàng
 POST /api/cart/add          # Thêm vào giỏ
@@ -131,6 +152,7 @@ GET  /api/orders/user/:id   # Lịch sử đơn hàng
 ```
 
 ### Admin
+
 ```
 GET  /api/admin/stats       # Thống kê doanh thu
 GET  /api/admin/orders      # Tất cả đơn hàng
@@ -142,6 +164,7 @@ DELETE /api/admin/users/:id # Xóa khách hàng
 ## 💾 Database Schema
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,6 +180,7 @@ CREATE TABLE users (
 ```
 
 ### Orders & Order Items
+
 ```sql
 CREATE TABLE orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -187,16 +211,17 @@ CREATE TABLE order_items (
 
 ## 🛡️ Security Features
 
--  **JWT Authentication** cho session management
--  **Password hashing** với bcrypt
--  **Input validation** và sanitization
--  **CORS** configuration
--  **SQL injection** protection với prepared statements
--  **XSS protection** với input encoding
+- **JWT Authentication** cho session management
+- **Password hashing** với bcrypt
+- **Input validation** và sanitization
+- **CORS** configuration
+- **SQL injection** protection với prepared statements
+- **XSS protection** với input encoding
 
 ## 📊 Tech Stack
 
 ### Frontend
+
 - **HTML5** - Semantic markup
 - **CSS3** - Responsive design, Flexbox, Grid
 - **JavaScript ES6+** - Async/await, Modules, Classes
@@ -205,6 +230,7 @@ CREATE TABLE order_items (
 - **Owl Carousel** - Image sliders
 
 ### Backend
+
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **SQLite3** - Database
@@ -215,6 +241,7 @@ CREATE TABLE order_items (
 ## 🔧 Development
 
 ### Code Structure
+
 - **Modular JavaScript** - Tách biệt concerns
 - **API-first approach** - Frontend hoàn toàn dựa vào API
 - **RESTful design** - Consistent API endpoints
@@ -222,11 +249,12 @@ CREATE TABLE order_items (
 - **Responsive design** - Mobile-friendly UI
 
 ### Best Practices
--  **Separation of concerns** - Frontend/Backend tách biệt
--  **API consistency** - Chuẩn RESTful
--  **Error handling** - User-friendly messages
--  **Security first** - Authentication & validation
--  **Performance** - Optimized queries & caching
+
+- **Separation of concerns** - Frontend/Backend tách biệt
+- **API consistency** - Chuẩn RESTful
+- **Error handling** - User-friendly messages
+- **Security first** - Authentication & validation
+- **Performance** - Optimized queries & caching
 
 ## 🎯 Admin Account
 
@@ -236,65 +264,64 @@ CREATE TABLE order_items (
 ## 🚦 Dự án
 
 #### 🛒 **A.1: Người mua hàng**
--  **Xem thông tin hàng hóa** - Trang chủ, chi tiết sản phẩm
--  **Tìm kiếm sản phẩm** - Real-time search
--  **Lọc theo giá/tên** - Filter hãng, giá, sắp xếp
--  **Chức năng mua hàng** - Giỏ hàng, thanh toán
+
+- **Xem thông tin hàng hóa** - Trang chủ, chi tiết sản phẩm
+- **Tìm kiếm sản phẩm** - Real-time search
+- **Lọc theo giá/tên** - Filter hãng, giá, sắp xếp
+- **Chức năng mua hàng** - Giỏ hàng, thanh toán
 
 #### 👨💼 **A.2: Nhân viên bán hàng (Admin)**
--  **Duyệt đơn hàng** - Cập nhật trạng thái, giảm stock
--  **Hủy đơn hàng** - Hoàn trả stock nếu đã duyệt
--  **In hóa đơn** - PDF invoice tự động
--  **Xem hóa đơn theo thời gian** - Date picker với validation
--  **Thống kê báo cáo** - Charts doanh thu theo hãng
--  **Quản lý sản phẩm** - CRUD hoàn chỉnh
+
+- **Duyệt đơn hàng** - Cập nhật trạng thái, giảm stock
+- **Hủy đơn hàng** - Hoàn trả stock nếu đã duyệt
+- **In hóa đơn** - PDF invoice tự động
+- **Xem hóa đơn theo thời gian** - Date picker với validation
+- **Thống kê báo cáo** - Charts doanh thu theo hãng
+- **Quản lý sản phẩm** - CRUD hoàn chỉnh
 
 #### 🏪 **Quản lý kho hàng**
--  **Stock tự động** - Giảm khi duyệt, tăng khi hủy đơn
--  **Validation** - Kiểm tra đủ hàng trước khi duyệt
--  **Cập nhật real-time** - Admin có thể điều chỉnh stock
+
+- **Stock tự động** - Giảm khi duyệt, tăng khi hủy đơn
+- **Validation** - Kiểm tra đủ hàng trước khi duyệt
+- **Cập nhật real-time** - Admin có thể điều chỉnh stock
 
 ### 🔧 **Tính năng kỹ thuật**
--  **Frontend-Backend Integration** - API-driven architecture
--  **Authentication System** - JWT tokens
--  **Database** - SQLite với inventory management
--  **Admin Dashboard** - Statistics với Chart.js
--  **Shopping Cart** - Full CRUD operations
--  **Order Management** - Complete workflow
--  **Date Picker** - Filter đơn hàng theo thời gian
--  **Search & Filter** - Real-time với validation
--  **Responsive Design** - Mobile-friendly
--  **Error Handling** - User-friendly messages
--  **Security** - Input validation & protection
+
+- **Frontend-Backend Integration** - API-driven architecture
+- **Authentication System** - JWT tokens
+- **Database** - SQLite với inventory management
+- **Admin Dashboard** - Statistics với Chart.js
+- **Shopping Cart** - Full CRUD operations
+- **Order Management** - Complete workflow
+- **Date Picker** - Filter đơn hàng theo thời gian
+- **Search & Filter** - Real-time với validation
+- **Responsive Design** - Mobile-friendly
+- **Error Handling** - User-friendly messages
+- **Security** - Input validation & protection
 
 ## 📝 Changelog
 
 ### v3.0.0 (Latest - Production Ready)
--  Quản lý kho hàng tự động (stock management)
--  Date picker với validation đầy đủ
--  Search & Filter real-time cho tất cả modules
--  PDF invoice generation
--  Thống kê doanh thu theo hãng
--  Error handling và user feedback
--  Console logging cho debugging
+
+- Quản lý kho hàng tự động (stock management)
+- Date picker với validation đầy đủ
+- Search & Filter real-time cho tất cả modules
+- PDF invoice generation
+- Thống kê doanh thu theo hãng
+- Error handling và user feedback
+- Console logging cho debugging
 
 ### v2.0.0
--  Hoàn thành tích hợp Frontend-Backend
--  JWT authentication
--  API-driven architecture
--  Admin dashboard với Chart.js
+
+- Hoàn thành tích hợp Frontend-Backend
+- JWT authentication
+- API-driven architecture
+- Admin dashboard với Chart.js
 
 ### v1.0.0
--  Static website với localStorage
--  Basic CRUD operations
 
-## 👥 Contributors
-
-**Nhóm tứ đại chiến tướng**
-- Trần Đức Anh
-- Phạm Kim Chung  
-- Nguyễn Thành Nam
-- Bùi Tấn Phát
+- Static website với localStorage
+- Basic CRUD operations
 
 ---
 
@@ -302,22 +329,22 @@ CREATE TABLE order_items (
 
 ### 🛍️ User Interface
 
-| Feature | Screenshot |
-|---------|------------|
-| **Trang chủ** | ![Trang chủ](./screenshots/Screenshot_1a.png) |
-| **Danh sách sản phẩm** | ![Sản phẩm](./screenshots/Screenshot_2a.png) |
-| **Chi tiết sản phẩm** | ![Chi tiết](./screenshots/Screenshot_3a.png) |
-| **Đăng nhập** | ![Đăng nhập](./screenshots/Screenshot_4.png) |
-| **Đăng ký** | ![Đăng ký](./screenshots/Screenshot_5.png) |
-| **Trang cá nhân** | ![Người dùng](./screenshots/Screenshot_6a.png) |
-| **Giỏ hàng** | ![Giỏ hàng](./screenshots/Screenshot_7a.png) |
-| **Tìm kiếm & Lọc** | ![Tìm kiếm](./screenshots/Screenshot_8a.png) |
+| Feature                | Screenshot                                     |
+| ---------------------- | ---------------------------------------------- |
+| **Trang chủ**          | ![Trang chủ](./screenshots/Screenshot_1a.png)  |
+| **Danh sách sản phẩm** | ![Sản phẩm](./screenshots/Screenshot_2a.png)   |
+| **Chi tiết sản phẩm**  | ![Chi tiết](./screenshots/Screenshot_3a.png)   |
+| **Đăng nhập**          | ![Đăng nhập](./screenshots/Screenshot_4.png)   |
+| **Đăng ký**            | ![Đăng ký](./screenshots/Screenshot_5.png)     |
+| **Trang cá nhân**      | ![Người dùng](./screenshots/Screenshot_6a.png) |
+| **Giỏ hàng**           | ![Giỏ hàng](./screenshots/Screenshot_7a.png)   |
+| **Tìm kiếm & Lọc**     | ![Tìm kiếm](./screenshots/Screenshot_8a.png)   |
 
 ### 🛠️ Admin Dashboard
 
-| Feature | Screenshot |
-|---------|------------|
-| **Thống kê doanh thu** | ![Thống kê](./screenshots/Screenshot_9a.png) |
-| **Quản lý sản phẩm** | ![Sản phẩm](./screenshots/Screenshot_10a.png) |
-| **Quản lý đơn hàng** | ![Đơn hàng](./screenshots/Screenshot_11a.png) |
+| Feature                | Screenshot                                      |
+| ---------------------- | ----------------------------------------------- |
+| **Thống kê doanh thu** | ![Thống kê](./screenshots/Screenshot_9a.png)    |
+| **Quản lý sản phẩm**   | ![Sản phẩm](./screenshots/Screenshot_10a.png)   |
+| **Quản lý đơn hàng**   | ![Đơn hàng](./screenshots/Screenshot_11a.png)   |
 | **Quản lý khách hàng** | ![Khách hàng](./screenshots/Screenshot_12a.png) |
