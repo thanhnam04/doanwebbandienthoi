@@ -258,7 +258,7 @@ CREATE TABLE order_items (
 
 ## 🎯 Admin Account
 
-**Username**: `admini`  
+**Username**: `admin`  
 **Password**: `adadad`
 
 ## 🚦 Dự án
