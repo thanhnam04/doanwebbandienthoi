@@ -134,19 +134,20 @@ PUT  /api/auth/profile/:id  # Cập nhật thông tin
 
 ```
 GET  /api/products          # Lấy tất cả sản phẩm
-GET  /api/products/:id      # Lấy sản phẩm theo ID
+GET  /api/products/:masp    # Lấy sản phẩm theo mã SP
 POST /api/admin/products    # Thêm sản phẩm (Admin)
-PUT  /api/admin/products/:id # Sửa sản phẩm (Admin)
-DELETE /api/admin/products/:id # Xóa sản phẩm (Admin)
+PUT  /api/admin/products/:masp # Sửa sản phẩm (Admin)
+DELETE /api/admin/products/:masp # Xóa sản phẩm (Admin)
 ```
 
 ### Cart & Orders
 
 ```
 GET  /api/cart/:userId      # Lấy giỏ hàng
-POST /api/cart/add          # Thêm vào giỏ
-PUT  /api/cart/update       # Cập nhật giỏ hàng
-DELETE /api/cart/remove     # Xóa khỏi giỏ
+POST /api/cart/:userId      # Thêm vào giỏ
+PUT  /api/cart/:userId/:masp # Cập nhật giỏ hàng
+DELETE /api/cart/:userId/:masp # Xóa khỏi giỏ
+DELETE /api/cart/:userId    # Xóa toàn bộ giỏ
 POST /api/orders            # Tạo đơn hàng
 GET  /api/orders/user/:id   # Lịch sử đơn hàng
 ```
@@ -159,6 +160,15 @@ GET  /api/admin/orders      # Tất cả đơn hàng
 GET  /api/admin/users       # Tất cả khách hàng
 PUT  /api/admin/orders/:id/status # Cập nhật trạng thái
 DELETE /api/admin/users/:id # Xóa khách hàng
+```
+
+### Inventory
+
+```
+GET  /api/inventory         # Lấy thông tin tồn kho
+PUT  /api/inventory/products/:masp/stock # Cập nhật stock
+POST /api/inventory/orders/:id/approve # Duyệt đơn (giảm stock)
+POST /api/inventory/orders/:id/cancel # Hủy đơn (tăng stock)
 ```
 
 ## 💾 Database Schema
@@ -201,6 +211,15 @@ CREATE TABLE order_items (
 );
 ```
 
+### Inventory Table
+
+```sql
+CREATE TABLE inventory (
+    masp TEXT PRIMARY KEY,
+    stock INTEGER DEFAULT 25
+);
+```
+
 ## 🔐 Authentication Flow
 
 1. **Đăng ký**: `POST /api/auth/register` → Tạo user mới
@@ -211,12 +230,12 @@ CREATE TABLE order_items (
 
 ## 🛡️ Security Features
 
-- **JWT Authentication** cho session management
-- **Password hashing** với bcrypt
-- **Input validation** và sanitization
+- **JWT Authentication** cho session management (không expiration)
+- **Password storage** - Plain text (chưa implement bcrypt)
+- **Prepared statements** - Ngăn SQL injection
 - **CORS** configuration
-- **SQL injection** protection với prepared statements
-- **XSS protection** với input encoding
+- **Error handling** middleware với response standardization
+- **Body parsing** với size limits
 
 ## 📊 Tech Stack
 
@@ -234,7 +253,6 @@ CREATE TABLE order_items (
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **SQLite3** - Database
-- **bcryptjs** - Password hashing
 - **jsonwebtoken** - JWT authentication
 - **cors** - Cross-origin requests
 
@@ -314,6 +332,40 @@ CREATE TABLE order_items (
 ### v2.0.0
 
 - Hoàn thành tích hợp Frontend-Backend
+- JWT authentication
+- API-driven architecture
+- Admin dashboard với Chart.js
+
+### v1.0.0
+
+- Static website với localStorage
+- Basic CRUD operations
+
+---
+
+## 📸 Screenshots
+
+### 🛍️ User Interface
+
+| Feature                | Screenshot                                     |
+| ---------------------- | ---------------------------------------------- |
+| **Trang chủ**          | ![Trang chủ](./screenshots/Screenshot_1a.png)  |
+| **Danh sách sản phẩm** | ![Sản phẩm](./screenshots/Screenshot_2a.png)   |
+| **Chi tiết sản phẩm**  | ![Chi tiết](./screenshots/Screenshot_3a.png)   |
+| **Đăng nhập**          | ![Đăng nhập](./screenshots/Screenshot_4.png)   |
+| **Đăng ký**            | ![Đăng ký](./screenshots/Screenshot_5.png)     |
+| **Trang cá nhân**      | ![Người dùng](./screenshots/Screenshot_6a.png) |
+| **Giỏ hàng**           | ![Giỏ hàng](./screenshots/Screenshot_7a.png)   |
+| **Tìm kiếm & Lọc**     | ![Tìm kiếm](./screenshots/Screenshot_8a.png)   |
+
+### 🛠️ Admin Dashboard
+
+| Feature                | Screenshot                                      |
+| ---------------------- | ----------------------------------------------- |
+| **Thống kê doanh thu** | ![Thống kê](./screenshots/Screenshot_9a.png)    |
+| **Quản lý sản phẩm**   | ![Sản phẩm](./screenshots/Screenshot_10a.png)   |
+| **Quản lý đơn hàng**   | ![Đơn hàng](./screenshots/Screenshot_11a.png)   |
+| **Quản lý khách hàng** | ![Khách hàng](./screenshots/Screenshot_12a.png) |hành tích hợp Frontend-Backend
 - JWT authentication
 - API-driven architecture
 - Admin dashboard với Chart.js
