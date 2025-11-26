@@ -411,7 +411,7 @@ async function themSanPham() {
     
     try {
         // Call API to add product
-        const response = await fetch('/api/admin/products', {
+        const response = await fetch('http://localhost:3000/api/admin/products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newSp)
@@ -449,7 +449,7 @@ async function xoaSanPham(masp, tensp) {
     if (window.confirm('Bạn có chắc muốn xóa ' + tensp)) {
         try {
             // Call API to delete product
-            const response = await fetch(`/api/admin/products/${masp}`, {
+            const response = await fetch(`http://localhost:3000/api/admin/products/${masp}`, {
                 method: 'DELETE'
             });
             
@@ -481,12 +481,14 @@ async function suaSanPham(masp) {
     if(!sp) return;
     
     for(var p of list_products) {
-        if(p.masp == masp && p.masp != sp.masp) {
+        // Kiểm tra trùng mã: chỉ báo lỗi nếu mã mới trùng với sản phẩm khác (không phải sản phẩm đang sửa)
+        if(p.masp == sp.masp && p.masp != masp) {
             alert('Mã sản phẩm bị trùng !!');
             return false;
         }
 
-        if(p.name == sp.name && p.masp != sp.masp) {
+        // Kiểm tra trùng tên: chỉ báo lỗi nếu tên mới trùng với sản phẩm khác (không phải sản phẩm đang sửa)
+        if(p.name == sp.name && p.masp != masp) {
             alert('Tên sản phẩm bị trùng !!');
             return false;
         }
@@ -494,7 +496,7 @@ async function suaSanPham(masp) {
     
     try {
         // Call API to update product
-        const response = await fetch(`/api/admin/products/${masp}`, {
+        const response = await fetch(`http://localhost:3000/api/admin/products/${masp}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sp)

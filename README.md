@@ -47,7 +47,8 @@ npm start         # Chạy server
 
 ### 4. Truy cập ứng dụng
 
-- **Frontend**: http://localhost:5500
+- **Frontend**: http://localhost:5500 (Live Server)
+- **Backend API**: http://localhost:3000
 - **Admin Panel**: http://localhost:5500/admin.html
 
 ## 🏗️ Kiến trúc hệ thống
